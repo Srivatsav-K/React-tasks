@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Every second generate a random number between 1 - 100 (hint - explore the setInterval & setTimeout functions)
+                Display the randomly generate number
+                If the number generated is an even number, catch it and display as a list
+                Also show the count of even numbers
+            */
+            const {useState,useEffect}=React
+
+            const CatchEvens=(props)=>{
+                const [random,setRandom]=useState(1)
+                const [even,setEven]=useState([])
+
+                useEffect(()=>{
+                    const interval=setInterval(()=>{
+                        const number=Math.ceil(Math.random()*99)
+                        setRandom(number)
+                        if(number%2==0){
+                            setEven([...even,number])
+                        }
+                    },1000)
+                    //return ()=>clearInterval(interval)
+                },[])
+                
+                
+                return(
+                    <div>
+                        <h1>{random}</h1>
+
+                        <h1>All Evens - {even.length}</h1>
+
+                        <ul>
+                            {even.map((ele,i)=>{
+                                return <li key={i}> {ele} </li>
+                            })}
+                        </ul>
+
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<CatchEvens/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

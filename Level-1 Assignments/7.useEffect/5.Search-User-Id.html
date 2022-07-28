@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                The user is provided with a form, where he can input the user id and get the data from the API Server
+                Fetch only the user by the id from the provided API using the axios package.
+                Display it's data like the name, email and city below
+            */
+
+            const {useState}=React
+
+            const UserSearch=(props)=>{
+                const [searchInput,setSearchInput]=useState('')
+                const [user,setUser]=useState({})
+                const [status,setStatus]=useState(true)
+
+                const handleSearchInput=(e)=>{
+                    setSearchInput(e.target.value)
+                }
+
+                const handleSubmit=(e)=>{
+                    e.preventDefault()
+                    axios.get(`https://jsonplaceholder.typicode.com/users/${searchInput}`)
+                        .then((userData)=>{
+                            setStatus(true)
+                            setUser(userData.data)
+                        })
+                        .catch((err)=>{
+                            console.log(err)
+                            setStatus(false)
+                        })
+                    
+                    //reset
+                    setSearchInput('')
+                }
+
+                return(
+                    <div>
+                        <form onSubmit={handleSubmit}>
+                            <input type="text" value={searchInput} onChange={handleSearchInput} placeholder='search id' />
+                            <input type='submit' value='search' />
+                        </form>
+                        
+                        {
+                            status ? Object.keys(user).length>0 && <h1>{user.name} - {user.email} - {user.address.city}</h1> :
+                            <p style={{color:'red'}}>Record not found</p> 
+                        }
+
+                    </div>
+                )
+            }
+            
+            ReactDOM.render(<UserSearch/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

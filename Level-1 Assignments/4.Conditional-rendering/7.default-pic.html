@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            default-pic
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Create several Components DefaultAvatar, UserAvatar, UserProfile and App
+
+                UserProfile component is rendered couple of times inside the App component
+                Pass user object as props to the UserProfile component
+
+                To display the user avatar we either render the UserAvatar component or the DefaultAvatar component
+                The avatar components are displayed based on the condition if the avatar is present or not
+
+                The UserProfile component renders the one of the two avatar components and h2
+
+                ​-> App
+                    ​-> UserProfile
+                        ​-> UserAvatar or DefaultAvatar 
+                        ​-> h2 
+
+            */
+
+
+            const App=(props)=>{
+                const user1 = { id: 1, name: 'Dona', avatar: 'https://i.ibb.co/FKvv2Mr/donna.png' }
+                const user2 = { id: 1, name: 'Rachel', avatar: '' }
+
+                return(
+                    <div>
+                        <UserProfile user={user1}/>
+                        <UserProfile user={user2}/>
+                    </div>
+
+                )
+            }
+
+            const UserProfile=(props)=>{
+                const {user}=props //obj destruct
+
+                return(
+                    <div>
+                        {(user.avatar.length!=0) ? <UserAvatar imgSource={user}/> : <DefaultAvatar/>}
+                        <h2>{user.name}</h2>
+                    </div>
+                )
+            }
+
+            const UserAvatar=(props)=>{
+                //console.log(props)
+                return (
+                    <img src={props.imgSource.avatar} alt="user-pic" />
+                )
+            }
+
+            const DefaultAvatar=(props)=>{
+                return(
+                    <img src="https://i.ibb.co/fDGgcyJ/default-user-pic.png" alt="default-user-pic"/>
+                )
+            }
+
+            
+
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

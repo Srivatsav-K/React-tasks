@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.7.0/validator.min.js" integrity="sha512-rJU+PnS2bHzDCvRGFhXouCSxf4YYaUyUfjXMHsHFfMKhWDIEBr8go2LZ2EYXOqASey1tWc2qToeOCYh9et2aGQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const {useState}=React
+
+            const Heading=(props)=>{
+                const {title}=props
+                return <h1>{props.title}</h1>
+            }
+
+            const SubHeading=(props)=>{
+                const {title}=props
+                return <h2>{title}</h2>
+            }
+
+            const Search=(props)=>{
+                const {search,handleSearch,placeholder}=props
+                return(
+                    <input type='text' value={search} onChange={handleSearch} placeholder={placeholder} />
+                )
+            }
+
+            const Table=(props)=>{
+                const {data,handleRemove}=props
+                return(
+                    <table border='1'>
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Email</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.map(ele=>{
+                                return(
+                                    <tr key={ele.id}>
+                                        <td>{ele.id}</td>
+                                        <td>{ele.name}</td>
+                                        <td>{ele.mobile}</td>
+                                        <td>{ele.email}</td>
+                                        <td>{ele.type}</td>
+
+                                        <td><button onClick={ ()=>{ handleRemove(ele.id)} } > remove </button> - edit</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                )
+            }
+
+            const ContactForm=(props)=>{
+                const {addContact}=props
+
+                const [name,setName]=useState('')
+                const [mobile,setMobile]=useState('')
+                const [email,setEmail]=useState('')
+                const [type,setType]=useState('')
+
+                const [error,setError]=useState({})
+                const errors={}
+
+                const handleChange=(e)=>{
+                    const name=e.target.name
+                    const value=e.target.value
+                    if(name=='name'){
+                        setName(value)
+                    }else if(name=='mobile'){
+                        setMobile(value)
+                    }else if(name=='email'){
+                        setEmail(value)
+                    }else if(name=='type'){
+                        setType(value)
+                    }
+                }
+
+                const runValidations=()=>{
+                    //name
+                    if(name.length==0){
+                        errors.name='Name is required'
+                    }
+                    //mobile
+                    if(mobile.length==0){
+                        errors.mobile='Mobile Number is required'
+                    }else if(!validator.isMobilePhone(mobile)){ 
+                        errors.mobile='Enter Valid Number'
+                    }else if(mobile.length<10){
+                        errors.mobile='Should be 10 digits'
+                    }
+
+                    //email
+                    if(email.length==0){
+                        errors.email='Email is required'
+                    }else if(!validator.isEmail(email)){
+                        errors.email='Enter Valid Email'
+                    }
+                }
+
+                const reset=()=>{
+                    setName('')
+                    setMobile('')
+                    setEmail('')
+                    setType('')
+                }
+
+                const handleSubmit=(e)=>{
+                    e.preventDefault()
+                    const formData={
+                        id:Number(new Date()),
+                        name:name,
+                        mobile:`+91 ${mobile}`,
+                        email:email,
+                        type:type
+                    }
+
+                    runValidations()
+
+                    if(Object.keys(errors).length==0){
+                        //console.log(formData)
+                        addContact(formData) //callback
+                        reset()
+                    }else{
+                        setError(errors)
+                    }
+                }
+
+                return(
+                    <form onSubmit={handleSubmit}>
+                        <label>Name</label> <br/>
+                        <input type='text' value={name} onChange={handleChange} name='name'/>
+                        {error.name && <span>{error.name}</span> }
+                        <br/> <br/>
+
+                        <label>Mobile</label> <br/>
+                        <input type='number' value={mobile} onChange={handleChange} name='mobile'/> 
+                        {error.mobile && <span>{error.mobile}</span> }
+                        <br/> <br/>
+
+                        <label>Email</label> <br/>
+                        <input type='text' value={email} onChange={handleChange} name='email'/> 
+                        {error.email && <span>{error.email}</span> }
+                        <br/> <br/>
+
+                        <label>Type</label> <br/>
+                        <select value={type} onChange={handleChange} name='type'>
+                            <option value="">Select</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Work">Work</option>
+                        </select> <br/> <br/>
+
+                        <input type="submit" value="Add Contact"/>
+                    </form>
+                )
+            }
+
+            const App=(props)=>{
+                const [search,setHandleSearch]=useState('')
+                const [contacts,setContacts]=useState([
+                    {id:1,name:'sri',mobile:'9999999999',email:'sri@gmail.com',type:'personal'},
+                ])
+                
+                //callback
+                const handleSearch=(e)=>{
+                    const input=e.target.value
+                    setHandleSearch(input)
+                }
+
+                //search filter functionality 
+                const filteredContacts=contacts.filter(ele=>{
+                    return (ele.name.includes(search) || ele.mobile.includes(search) || ele.email.includes(search))
+                })
+
+                //handle button remove
+                const handleRemove=(id)=>{
+                    const result=contacts.filter(ele=>{
+                        return ele.id != id
+                    })
+                    setContacts(result)
+                }
+
+                //addContact
+                const addContact=(formData)=>{
+                    setContacts([...contacts,formData])
+                }
+
+                return(
+                    <div>
+                        <Heading title='Contact Manager App' />
+                        <SubHeading title={`Listing Contacts - ${filteredContacts.length} of ${contacts.length}`} />
+                        {
+                            contacts.length>0 ?
+                            (
+                                <div>
+                                    <Search search={search} handleSearch={handleSearch} placeholder='search by name, mobile or email'/> <br/> <br/>
+                                    { filteredContacts.length>0 ? <Table data={filteredContacts} handleRemove={handleRemove}/> : <h3>No Matching Contacts Found</h3> }
+                                </div>
+                            ):
+                            <SubHeading title='No Matching Contacts Found. Add your First Contact.'/>
+                        }
+                        <br/> <hr/>
+                        <SubHeading title='Add Contact'/>
+                        <ContactForm addContact={addContact}/>
+                    </div>
+                )
+            }
+            
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

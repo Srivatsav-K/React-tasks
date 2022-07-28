@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                Create a component called as CompletedTasks
+                You are provided with an array of tasks, pass them as props to the component
+                The component renders a button " Show Completed Tasks "
+                Once the user clicks on the button, then display only the completed tasks title comma separated
+            */
+
+            const tasks = [
+                { id: 1, title: 'Task 1', isCompleted: true },
+                { id: 2, title: 'Task 2', isCompleted: true },
+                { id: 3, title: 'Task 3', isCompleted: false },
+                { id: 4, title: 'Task 4', isCompleted: false },
+                { id: 5, title: 'Task 5', isCompleted: true }
+            ]
+
+            const CompletedTasks=(props)=>{
+
+                const tasksCompleted=()=>{
+                    const result=[]
+                    //const statusTrue=props.data.filter(ele=> ele.isCompleted==true).forEach(ele=>result.push(ele.title))
+                    const statusTrue=props.data.forEach(ele=>{
+                        if(ele.isCompleted==true){
+                            result.push(ele.title)
+                        }
+                    })
+                    alert(result.join(', '))
+                }
+
+                return( <button onClick={tasksCompleted}>Show Completed Tasks</button> )
+            }
+
+            const ele=<CompletedTasks data={tasks}/>
+
+            ReactDOM.render(ele,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

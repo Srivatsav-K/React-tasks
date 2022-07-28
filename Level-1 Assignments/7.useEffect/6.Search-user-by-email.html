@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                The user is provided with a form, where he can input the user email and get the data from the API Server
+                Display data like the name, email and city below
+                    Hint - Note that there is no api provided to get the user by the email, like the way we do for id. Hence get all the users from the backend api and then find the user based on the email
+            */
+
+            const {useState,useEffect}=React
+
+            const UserSearch=(props)=>{
+                const [email,setEmailChange] = useState('')
+                const [users,setUsers]=useState({})
+                const [foundUser,setFoundUser]=useState({})
+                const [status,setStatus]=useState(true)
+                
+                useEffect(()=>{
+                    axios.get('https://jsonplaceholder.typicode.com/users')
+                        .then((usersData)=>{
+                            setUsers(usersData.data)
+                        })
+                },[])
+
+                const handleEmailChange=(e)=>{
+                    setEmailChange(e.target.value)
+                }
+
+                const handleSubmit=(e)=>{
+                    e.preventDefault()
+
+                    //find email
+                    const result=users.find(ele=>{
+                        return ele.email==email
+                    })
+
+                    if(result){
+                        setStatus(true)
+                        setFoundUser(result)
+                    }else{
+                        setStatus(false)
+                    }
+
+                    //reset
+                    setEmailChange('')
+                }
+
+                return(
+                    <div>
+
+                        <form onSubmit={handleSubmit}>
+                            <input type="email" value={email} onChange={handleEmailChange} placeholder='Search Email'/>
+                            <input type='submit' value='search'/>
+                        </form>
+
+                        {   
+                            ( status ) ? ( Object.keys(foundUser).length>0 && <h1>{foundUser.name} - {foundUser.email} - {foundUser.address.city}</h1> )
+                            :
+                            ( <p style={{color:'red'}}>Record not found</p> )
+                        }
+
+                    </div>
+                )
+            }
+            
+            ReactDOM.render(<UserSearch/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

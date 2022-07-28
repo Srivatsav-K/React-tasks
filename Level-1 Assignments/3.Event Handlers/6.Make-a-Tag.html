@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Hashtag generator
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Create a component called as TagGenerator
+                The component renders a button " Enter a string "
+                Once the user clicks on the button, take the user input using the browser prompt() method
+                Generate a hash tag and display back to the user using the alert() method
+                The event handler function has to be declared inside the component
+            */
+
+            const TagGenerator=(props)=>{
+
+                const hashGen=()=>{
+                    const input=prompt('Enter a string')
+                    const inputArr=input.split(' ')
+                    let result='#'
+
+                    for (let i = 0; i < inputArr.length; i++) {
+                        result+=inputArr[i][0].toUpperCase() + inputArr[i].slice(1)
+                    }
+
+                    alert(result)
+                }
+
+                return <button onClick={hashGen}>Enter a String</button>
+            }
+
+            const ele=<TagGenerator/>
+
+            ReactDOM.render(ele,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            current time 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           /*
+            Create a Time Component
+            The purpose of the time component is to return the current system time in the format of (HH:MM am/pm)
+            Return a h1 element from the component
+           */
+          const date=new Date()
+          const time= date.getHours()>12 ? `${date.getHours()-12} : ${date.getMinutes()} PM` : `${date.getHours()} : ${date.getMinutes()} AM`
+
+           function Time(props){
+               return <h1>{props.result}</h1>
+           }
+
+           const ele=<Time result={time}/>
+
+           ReactDOM.render(ele,rootHandle)
+           
+        </script>
+    </body>
+</html>

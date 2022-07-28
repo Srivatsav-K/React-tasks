@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                You are provided with a list of tasks information
+                Your task is to allow the user to mark all the tasks as complete once
+                When a user selects the checkbox, all the tasks status should update to true, when the user unchecks then the status becomes false
+                You are also required to toggle the status message as pending or completed
+            */
+            const {useState}=React
+            const TaskInformation=(props)=>{
+                const [tasks,setTasks]=useState([
+                    { id: 1, title: 'get the website live', completed: true },
+                    { id: 2, title: 'work on user validation', completed: false },
+                    { id: 3, title: 'Automate the deployment process', completed: false }
+                ])
+                const [completed,setCompleted]=useState(false)
+
+                const handleCompleted=(e)=>{
+                    setCompleted(e.target.checked)
+                }
+
+                return(
+                    <div>
+                        <h1>Mark all as complete</h1>
+                        <table border='1'>
+
+                            <thead>
+                                <tr>
+                                    <th> <input type="checkbox" value={completed} onChange={handleCompleted} /> </th>
+                                    <th>Title</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {tasks.map(ele=>{
+                                    return(
+                                        <tr key={ele.id}>
+                                            <td> <input type="checkbox" checked={completed} disabled={true} /> </td>
+                                            <td>{ele.title}</td>
+                                            <td>{ completed ? 'completed' : 'pending' }</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+
+                        </table>
+                    </div>
+                )
+            }
+            ReactDOM.render(<TaskInformation/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

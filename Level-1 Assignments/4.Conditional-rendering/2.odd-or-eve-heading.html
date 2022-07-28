@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                Create components called as NumberShow and App
+                Pass a number as a prop to NumberShow
+                Render the NumberShow component twice inside an App component
+                Once pass a even number and another time pass odd number
+                If the number is an even number then the NumberShow component renders n is even or n is odd
+            */
+
+            const NumberShow=(props)=>{
+                const {number}=props
+                return(
+                    number%2==0 ? <h1>{number} is even</h1> : <h2>{number} is odd</h2>
+                )
+
+            }
+
+            const App=(props)=>{
+                
+                return(
+                    <div>
+                        <NumberShow number={10}/>
+                        <NumberShow number={21}/>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

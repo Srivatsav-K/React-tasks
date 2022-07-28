@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script src="E:\DCT\REACT\Fundamentals\JS\react.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\react-dom.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            
+            const user={
+                item:'laptop',
+                picture:'https://i.picsum.photos/id/1/367/267.jpg?hmac=jZdc5TviQPVhxLyvyU8siO-I5FMVXVZpBhsBYKbBJpM'
+            }
+
+            const ele=<img src={user.picture} alt={user.item}/> 
+
+            ReactDOM.render(ele,rootHandle)
+
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const {useState}=React
+
+            const usersData=[
+                {id:1,name:'user1'},
+                {id:2,name:'user2'},
+                {id:3,name:'user3'},
+            ]
+
+            const UserList=(props)=>{
+                const [users,setUser]=useState(usersData)
+
+                //callback
+                const removeUser=(id)=>{
+
+                    const confirmRemove=confirm('Are you sure?')
+                    
+                    if(confirmRemove){
+                        const result=users.filter(ele=> ele.id != id )
+                        console.log(result)
+                        setUser(result)
+                    }
+                }
+
+                return(
+                    <div>
+                        <h1>Listing Users - {users.length}</h1>
+                        <ul>
+                            {users.map(ele=>{
+                                return(
+                                    <li key={ele.id}>
+                                        {ele.name}
+                                        <button onClick={ ()=>{removeUser(ele.id)} }>remove</button>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<UserList/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                1.Create a Component called TasksList
+                2.Pass only the completed tasks as prop to the component
+                3.Return ul of completed tasks
+            */
+
+            const App=(props)=>{
+
+                const tasks = [
+                    { id: 1, title: 'Task 1', isCompleted: true },
+                    { id: 2, title: 'Task 2', isCompleted: true },
+                    { id: 3, title: 'Task 3', isCompleted: false }
+                ]
+
+                const completedTasks=tasks.filter((ele)=>{
+                    return ele.isCompleted
+                })
+
+                const incompletedTasks=tasks.filter((ele)=>{
+                    return !ele.isCompleted
+                })
+
+                return(
+
+                    <div>
+                        <TaskLister data={tasks} text='All'/>
+                        <TaskLister data={completedTasks} text='Completed'/>
+                        <TaskLister data={incompletedTasks} text='Incompleted'/>
+                    </div>
+                )
+            }
+
+            const TaskLister=(props)=>{
+                return(
+                    <div>
+                        <h1>{props.text} Tasks</h1>
+                        <ul>
+                            {props.data.map(ele=>{
+                                return <li key={ele.id}>{ele.title}</li>
+                            })}
+                        </ul>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

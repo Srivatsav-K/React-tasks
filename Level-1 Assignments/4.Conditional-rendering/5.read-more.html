@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            article-read-more
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root') 
+            /*
+                Create components called as ArticlesIntro and App
+                The purpose of the ArticlesIntro component is it will return the entire string if the characters is less than 100, else it will only show the first 100 characters of the string followed by ... (3 dots) along with the button to read more
+                When the user clicks on the read more button then the whole text needs to be displayed in an alert box
+                Render the component 2 times inside the App component
+                First time pass the string "React is Awesome"
+                Second time pass the string "React (also known as React.js or ReactJS) is an open-source, front end, JavaScript library for building user interfaces or UI components. It is maintained by Facebook and a community of individual developers and companies.React can be used as a base in the development of single-page or mobile applications. However, React is only concerned with rendering data to the DOM, and so creating React applications usually requires the use of additional libraries for state management and routing. Redux and React Router are respective examples of such libraries."
+            */
+
+            const ArticlesIntro=(props)=>{
+                const {string}=props
+
+                let component
+
+                function fullText(){
+                    alert(string)
+                }
+                
+                if(string.length>100){
+                    component=(
+                        <div>
+                            {string.slice(0,100)+'...'}
+                            <br/>
+                            <button onClick={fullText}>read more</button>
+                        </div>
+                    )
+
+                }else{
+                    component=string
+                }
+
+                return(
+                    <div style={{padding:'50px'}}>
+                        {component}
+                        <hr/>
+                    </div>
+                )
+            }
+
+            const App=(props)=>{
+                const string1='React is Awesome'
+                const string2="React (also known as React.js or ReactJS) is an open-source, front end, JavaScript library for building user interfaces or UI components. It is maintained by Facebook and a community of individual developers and companies.React can be used as a base in the development of single-page or mobile applications. However, React is only concerned with rendering data to the DOM, and so creating React applications usually requires the use of additional libraries for state management and routing. Redux and React Router are respective examples of such libraries."
+
+                return(
+                    <div>
+                        <h1 style={{textAlign:'center'}}>Article</h1>
+                        <ArticlesIntro string={string1}/>
+                        <ArticlesIntro string={string2}/>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

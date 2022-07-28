@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+        <style>
+            .All{
+                position: relative;
+                text-align: center;
+            }
+            .dashboard{
+                display: flex;
+                justify-content: space-between;
+                margin-left:20px;
+                border:1px solid black;
+                text-align: center
+                
+            }
+            .popUp{
+                position:absolute;/*absolute*/
+                width: 250px;
+                min-height: 250px;
+                top: 30%;
+                left: 40%;
+                border: 1px solid black;
+                background-color: black;
+                color: blanchedalmond;
+                
+            }
+            .popUpTitle{
+                display: flex;
+                flex-direction: row;
+                justify-content:space-between; 
+                margin-bottom: 5px;
+            }
+            .popUpHeading{
+                display: flex;
+                flex-direction: row;
+                justify-content:space-between; 
+                margin-bottom: 5px;
+            }
+            .table{
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const {useState,useEffect}=React 
+
+            const Dashboard=(props)=>{
+                const {customers,customersOnce}=props
+
+                const totalAmount=customers.reduce((previousValue,currentValue)=>{
+                    return previousValue+currentValue.Amount
+                },0)
+
+                return(
+                    <div>
+                        <h1>Customers Dashboard</h1>
+                        <hr/>
+                        <div className='dashboard' >
+                            <h2>Total Orders - { customers.length } </h2>
+                            <h2>Amount - {totalAmount}</h2>
+                            <h2>Customers - {customersOnce.length} </h2>
+                        </div>
+                        <hr/>
+                    </div>
+                )
+            }
+            
+            const SearchBox=(props)=>{
+                const {customers,searchInput,handleChange}=props
+                return(
+                    <input type="text" value={searchInput} onChange={handleChange} placeholder='Search by name or number' />
+                )
+            }
+
+            const DetailsPopUp=(props)=>{
+                const {details,handleClosePopUp}=props
+
+                return(
+                    <div className='popUp' >
+                        <div className='popUpHeading'>
+                            {details[0].Name} - {details[0].Phone} 
+                            <button onClick={handleClosePopUp} >x</button>
+                        </div>
+
+                        <div className='popUpTitle' >
+                            <div>Order Count - {details.length}</div>
+                            <div>Total Amount - {details.reduce((prev,current)=>prev+current.Amount,0)}</div>
+                        </div>
+
+                        <table border='1' className='table' >
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {details.map((ele,i)=>{
+                                    return(
+                                        <tr key={ele._id} >
+                                            <td>{i+1}</td>
+                                            <td>{ele.Date.slice(0,10)}</td>
+                                            <td>{ele.Amount}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>           
+                )
+            }
+
+            const ListingCustomers=(props)=>{
+                const {filterSearchResults,showDetails}=props
+                return(
+                    <div>
+                        {
+                            filterSearchResults.length>0 ? (
+                                <div>
+                                    <h2>Listing Customers - {filterSearchResults.length} </h2>
+                                    <table border='1' className='table'>
+                                        <thead>
+                                            <tr>
+                                                <th>S.No</th>
+                                                <th>Name</th>
+                                                <th>Mobile</th>
+                                                <th>Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {filterSearchResults.map((ele,i)=>{
+                                                return(
+                                                    <tr key={i} >
+                                                        <td>{i+1}</td>
+                                                        <td>{ele.Name}</td>
+                                                        <td>{ele.Phone}</td>
+                                                        <td>
+                                                            <button onClick={()=>{showDetails(ele.Name)}} >
+                                                                Show Details
+                                                            </button> 
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            ) : (
+                                <h3 style={{color:'red'}} >No Results Found</h3>
+                            )
+                        }
+                        <hr/>
+                    </div>
+                )
+            }
+
+            const OrderDistribution=(props)=>{
+                //const {once,twice,thrice,fourTimes,fiveAndAbove}=props
+                const {data}=props
+                //console.log(data)
+                return(
+                    <div>
+                        <h2>Order Distribution</h2>
+                        <table border='1' className='table'>
+                            <thead>
+                                <tr>
+                                    <th>No.Of Orders</th>
+                                    <th>Count Of Customers</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((ele,i)=>{
+                                    return(
+                                        <tr key={i}>
+                                            <td>{ i<4 ? i+1 : `${i+1}+` }</td>
+                                            <td>{ele}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                )
+            }
+
+            const DashboardContainer=(props)=>{
+                const [customers,setCustomers]=useState([])
+                const [customersOnce,setCustomersOnce]=useState([])
+                const [searchInput,setSearchInput]=useState('')
+                
+                const [details,setDetails]=useState([])
+
+                const [once,setOnce]=useState(0)
+                const [twice,setTwice]=useState(0)
+                const [thrice,setThrice]=useState(0)
+                const [fourTimes,setFourTimes]=useState(0)
+                const [fiveAndAbove,setFiveAndAbove]=useState(0)
+
+                const [closePopUp,setClosePopUp]=useState(false)
+
+                //fetch data from api
+                useEffect(()=>{
+                    axios.get('http://localhost:3001/api/customers')
+                        .then((response)=>{
+                            //console.log(response.data)
+                            setCustomers(response.data)
+                        })
+                        .catch((err)=>{
+                            console.log(err)
+                        })
+                },[])
+
+                //set non-repeating names & Distribution data
+                useEffect(()=>{
+                    const customersCopy=[...customers]
+                    const all=[]
+
+                    //Display each name only once
+                    //only names
+                    const names=customersCopy.map(ele=> ele.Phone)
+                    //non repeating names in array
+                    const names1=[...names]
+                    for(let i=0;i<names1.length;i++){
+                        let name=names1[i]
+                        if(names.indexOf(name)!=names.lastIndexOf(name)){
+                            names.splice(names.indexOf(name),1)
+                        }
+                    }                   
+                    //non repeating data in array
+                    names.sort().forEach(ele=>{
+                        const once=customers.find(element=> element.Phone==ele)
+                        all.push(once)
+                    })
+                    setCustomersOnce(all)
+
+                    //Distribution
+                    const one=[], two=[], three=[], four=[], fiveAbove=[]     
+                    all.forEach(ele=>{
+                        let name=ele.Phone
+                        let count=0
+
+                        customers.forEach(element=>{
+                            if(ele.Phone==name){
+                                count+=1
+                            }
+                        })
+
+                        if(count==1){
+                            one.push({...ele,count:count})
+                        }else if(count==2){
+                            two.push({...ele,count:count})
+                        }else if(count==3){
+                            three.push({...ele,count:count})
+                        }else if(count==4){
+                            four.push({...ele,count:count})
+                        }else if(count>=5){
+                            fiveAbove.push({...ele,count:count})
+                        }
+                    })
+                    setOnce(one.length)
+                    setTwice(two.length)
+                    setThrice(three.length)
+                    setFourTimes(four.length)
+                    setFiveAndAbove(fiveAbove.length)
+                    
+                },[customers])
+
+                //cb-input field controlled component 
+                const handleChange=(e)=>{
+                    setSearchInput(e.target.value)
+                }
+
+                //search filter
+                const filterSearchResults=customersOnce.filter(ele=>{
+                    return ele.Name.toLowerCase().includes(searchInput.toLowerCase()) || String(ele.Phone).includes(searchInput)
+                })
+                
+                //onClick button event handler
+                const showDetails=(name)=>{
+                    const result=customers.filter(ele=>ele.Name==name)
+                    setDetails(result)
+                    setClosePopUp(true)
+                    //console.log(result)
+                }
+
+                const handleClosePopUp=()=>{
+                    setClosePopUp(false)
+                }
+               
+                return(
+                    <div className='All' >
+                        <Dashboard customers={customers} customersOnce={customersOnce} />
+                        <SearchBox customers={customers} searchInput={searchInput} handleChange={handleChange} />
+                        <br/> <br/>
+                        {closePopUp && <DetailsPopUp details={details} handleClosePopUp={handleClosePopUp}/> }
+                        <ListingCustomers filterSearchResults={filterSearchResults} showDetails={showDetails} details={details} />
+                        <OrderDistribution data={[once,twice,thrice,fourTimes,fiveAndAbove]} />
+                    </div>
+                )
+            }
+
+            const App=(props)=>{    
+                return(
+                    <DashboardContainer/>
+                )
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

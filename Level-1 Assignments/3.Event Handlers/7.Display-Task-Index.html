@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            7.Display-Task-Index
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                Create a component called as DisplayIndex
+                You are provided with an array of tasks, which you need to pass as props to the component
+                The component renders a list of task items
+                When a user clicks on any task, display the index in which the task is found within the array
+            */
+
+            const tasks = [
+                { id: 1, title: 'Task 1', isCompleted: true },
+                { id: 2, title: 'Task 2', isCompleted: true },
+                { id: 3, title: 'Task 3', isCompleted: false }
+            ]
+
+            const DisplayIndex=(props)=>{
+
+                const taskIndex=(i)=>{
+                    alert(`You clicked on the task present at ${i} index`)
+                }
+
+                return(
+                    <ul>
+                        {props.data.map((ele,i)=>{
+                            return <li key={ele.id} onClick={ ()=>{taskIndex(i)} }>{ele.title}</li>
+                        })}
+                    </ul>
+                )
+            }
+
+            const ele=<DisplayIndex data={tasks}/>
+
+            ReactDOM.render(ele,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

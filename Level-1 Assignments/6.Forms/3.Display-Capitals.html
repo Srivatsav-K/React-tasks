@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Create a controller component called as DisplayCap
+                There is only one text area as the input field
+                Any alphabet typed by the user, should be saved inside the state as a capital letter, and the same to be displayed
+            */
+
+            const {useState}=React
+
+            const DisplayCap=(props)=>{
+                const [text,setText]=useState('')
+
+                const handleTextChange=(e)=>{
+                    setText(e.target.value.toUpperCase())
+                }
+
+                return(
+                    <div>
+                        <h2>Display in Caps</h2>
+                        <form>
+                            <textarea value={text} onChange={handleTextChange}></textarea>
+                        </form>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<DisplayCap/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

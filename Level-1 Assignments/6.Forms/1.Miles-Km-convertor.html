@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Create a component called as MilesConvertor
+                The component is responsible for converting miles to kms
+                Provide a slider input field (hint type="range")
+                When the user moves the slider, he / she controls the miles and you will need to compute and display the distance in kms.
+                Set the max miles to 100
+            */
+
+            const {useState}=React
+
+            const MilesConvertor=(props)=>{
+
+                const [kms,setKms]=useState(0)
+                const [miles,setMiles]=useState(0)
+
+                const handleMilesChange=(e)=>{
+                    const input=e.target.value
+                    setMiles(input)
+
+                    const milesToKms= Number(input)*1.609344   //1 mile = 1.609344 km
+                    setKms(milesToKms.toFixed(2))
+                }
+
+                return(
+                    <div>
+                        <h1>Miles Convertor</h1>
+                        <h2>Kms - {kms} </h2>
+                        <h2>Miles - {miles} </h2>
+
+                        <form>
+                            <input type='range' value={miles}  onChange={handleMilesChange} />
+                        </form>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<MilesConvertor/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

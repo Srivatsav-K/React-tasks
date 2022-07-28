@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const App=(props)=>{
+                const users = [
+                    { id: 1, name: 'adam', isLoggedIn: false }, 
+                    { id: 2, name: 'steve', isLoggedIn: true }, 
+                    { id: 3, name: 'dona', isLoggedIn: true }, 
+                    { id: 4, name: 'kumar', isLoggedIn: false } 
+                ]
+                return(
+                    users.map(ele=>{
+                        return <UserNames key={ele.id} {...ele} />
+                    })
+                )
+            }
+
+            const UserNames=(props)=>{
+                const {name}=props
+                return <h2>{name}</h2>
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Total Component 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           /*
+            Create a component called as Total
+            Return react element that will display the total as well as all the prices as a list item
+            You are provided with an array of prices
+           */
+          
+           const prices = [150,250,200,400]
+
+           function Total(props){
+               let result=0
+               props.prices.forEach(ele=>result+=ele)
+               
+               return(
+                    <div>
+                        <h1>Total Bill = {result}</h1>
+                        <ul>
+                            {props.prices.map((ele,i)=> <li key={i}>{ele}</li>)}
+                        </ul>
+                    </div>
+               )
+           }
+
+           const ele=<Total prices={prices}/>
+
+           ReactDOM.render(ele,rootHandle)
+           
+        </script>
+    </body>
+</html>

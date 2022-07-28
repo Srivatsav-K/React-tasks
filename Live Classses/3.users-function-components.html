@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script src="E:\DCT\REACT\Fundamentals\JS\react.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\react-dom.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const users=[
+                {id:1, name:'sam', gender:'male', department:'tech'},
+                {id:2, name:'john', gender:'male', department:'finance'},
+                {id:3, name:'mike', gender:'male', department:'tech'},
+                {id:4, name:'donna', gender:'female', department:'hr'}
+            ]
+            
+            //helper function
+            function filterByGender(gender){
+                return(
+                    users.filter(ele=> ele.gender==gender)
+                )
+            }
+
+            //h2 generator component
+            function H2Gen(props){
+                return <h2>{props.h2text}</h2>
+            }
+
+            //list generator component
+            function ListGen(props){
+                return(
+                    <ul>
+                        {props.users.map(ele=>{
+                            return <li key={ele.id}>{ele.name}</li>
+                        })}
+                    </ul>
+                )
+            }
+
+            const ele=(
+                <div>
+                    <H2Gen h2text={`Listing Users - ${users.length}`}/>
+                    <ListGen users={users}/>
+
+                    <hr/>
+
+                    <H2Gen h2text={`Male Users - ${filterByGender('male').length}`}/>
+                    <ListGen users={filterByGender('male')}/>
+
+                    <hr/>
+
+                    <H2Gen h2text={`Female Users - ${filterByGender('female').length}`}/>
+                    <ListGen users={filterByGender('female')}/>
+
+                    <hr/>
+                    
+                </div>
+            )
+
+            ReactDOM.render(ele,rootHandle)
+
+        </script>
+
+    </body>
+</html>

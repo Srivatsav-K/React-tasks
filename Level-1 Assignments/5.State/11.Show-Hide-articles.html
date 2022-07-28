@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                1. Create 2 components App & TextDisplay
+                2. Articles is present inside the App Component
+                3. Pass each article as prop to TextDisplay Component
+                4. Maintain state "status" inside the TextDisplay
+                5. Display text recevied via props along with button
+                6. When the status is true. 
+                    then display text 
+                    the button text needs to be hide - article title
+                7. When the status is false
+                    then don't display text
+                    the button text needs to be show - article title
+                8. Add a event handler, which even clicked will change status to it's opposite value
+            */
+            const {useState}=React
+
+            const App=(props)=>{
+                const data=[
+                    {title:'React Article',body:'React makes it painless to create interactive Uls. Design simple views for each state in your application, and React will efficiently update and render'},
+                    {title:'JavaScript Article',body:'JavaScript (JS) is a lightweight, interpreted, or just-in-time compiled programming language with first-class functions. While it is most well known as the scripting language for Web pages'},
+                    {title:'Node Article',body:'Node js is an open-source, cross-platform, back-end, JavaScript runtime environment that executes JavaScript code outside a web browser.'}
+                ]
+
+                return(
+                    <div>
+                        <h1>Show/Hide Many</h1>
+                        <h2>Listing Articles - {data.length}</h2>
+                        {data.map((ele,i)=> <TextDisplay {...ele} key={i}/> )}
+                    </div>
+                )
+            }
+
+            const TextDisplay=(props)=>{
+
+                const {title,body}=props
+
+                //each component will maintain its own state
+                const [status,setStatus]=useState(true)
+
+                const toggle=()=>{
+                    const result=!status
+                    setStatus(result)
+                }
+
+                return(
+                    <div>
+                        { status && <p>{body}</p> }
+
+                        <button onClick={toggle}>{ status ? 'Hide' : 'Show'} - {title} </button>
+
+                        <hr/>
+                    </div>
+                )
+            }
+
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script src="E:\DCT\REACT\Fundamentals\JS\react.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\react-dom.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const users=[
+                {id:1, name:'sam', gender:'male', department:'tech'},
+                {id:2, name:'john', gender:'male', department:'finance'},
+                {id:3, name:'mike', gender:'male', department:'tech'},
+                {id:4, name:'donna', gender:'female', department:'hr'}
+            ]
+            
+            // declare a function the filters the names by gender to reuse it later.
+            const employeesByGender=(gender)=>{
+                return users.filter(ele=> ele.gender==gender)
+            }
+
+            const ele=(
+                <div>
+                    <h1>Listing users - {users.length}</h1>
+
+                    <ul>
+                        {users.map((ele)=>{
+                            return <li key={ele.id}> {ele.name} - {ele.gender} - {ele.department}</li>
+                        })}
+                    </ul>
+
+                    <hr/>
+
+                    {/* Filter all Male employees */}
+                    <h1> Male Employees - {employeesByGender('male').length }</h1>
+                    <ul>
+                        {employeesByGender('male').map(ele=> <li key={ele.id}> {ele.name} </li> )}
+                    </ul>
+                    
+                    <hr/>
+
+                    {/* Filter all female employees */}
+                    <h1> Female Employees - {employeesByGender('female').length }</h1>
+                    <ul>
+                        {employeesByGender('female').map(ele=> <li key={ele.id}>{ele.name}</li> )}
+                    </ul>
+                     
+                    
+
+                </div>
+            )
+           
+            ReactDOM.render(ele,rootHandle)
+
+        </script>
+
+    </body>
+</html>

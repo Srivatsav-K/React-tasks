@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Create a UsersSelect component
+                Fetch all the users information from the provided API using the axios package
+                Display the data as options within a select tag
+            */
+
+            const {useState,useEffect}=React
+
+            const UsersToDo=(props)=>{
+                const [users,setUsers]=useState([])
+                const [selectedUserId,setSelectedUserId]=useState(0)
+                const [tasks,setTasks]=useState([])
+                const [completedTasks,setCompletedTasks] = useState(false)
+
+                //fetch all users data
+                useEffect(()=>{
+                    axios.get('https://jsonplaceholder.typicode.com/users')
+                        .then((usersData)=>{
+                            setUsers(usersData.data)
+                        })
+                },[])
+                
+                //cb -- Dropdown select
+                const handleSelect=(e)=>{
+                    setSelectedUserId(e.target.value)
+                    //console.log(e.target.value)
+
+                    setCompletedTasks(false) // if we select one more user while showing completed tasks of current user. set Checked to default(false)
+                }
+
+                //cb -- fetch an user's tasks
+                const tasksOfAnUser=()=>{
+                    return(
+                        axios.get(`https://jsonplaceholder.typicode.com/todos?userId=${selectedUserId}`)
+                        .then((userTasks)=>{
+                            setTasks(userTasks.data)
+                        })
+                    )
+                }
+
+                //fetch selected user's task and show whenever selecteduserId is changed
+                useEffect(()=>{
+                    tasksOfAnUser()
+                },[selectedUserId])
+
+                //cb -- handle completed tasks checkbox
+                const handleCompletedTasks=(e)=>{
+                    setCompletedTasks(!completedTasks)
+                }
+
+                //filter and show completed tasks of the selected user whenever completed is checked
+                useEffect(()=>{
+                    if(completedTasks){
+                        const result=tasks.filter(ele=>{
+                            return ele.completed
+                        })
+                        setTasks(result)
+                    }else{ // DOUBT-----------> is there a better way?
+                        tasksOfAnUser()
+                    }
+                },[completedTasks])
+
+                return(
+                    <div>
+                        <label>Users : </label>
+
+                        <select value={selectedUserId} onChange={handleSelect} >
+                            <option value="">select users</option>
+                            {
+                                users.map(ele=>{
+                                    return(
+                                        <option value={ele.id} key={ele.id}>
+                                            {ele.name}
+                                        </option>
+                                    )
+                                })
+                            }
+                        </select>
+
+                        {
+                            tasks.length>0 && (
+                                <div>
+                                    <h1>Listing Tasks - {tasks.length}</h1>
+                                    
+                                    <input type='checkbox' checked={completedTasks} onChange={handleCompletedTasks} id='checkedtasks'/>
+                                    <label htmlFor="checkedtasks">Completed</label>
+            
+                                    <ul>
+                                        {tasks.map(ele=>{
+                                            return <li key={ele.id}> {ele.completed ? <s>{ele.title}</s> : ele.title } </li>
+                                        })}
+                                    </ul>
+                                </div>
+                            )
+                        }
+
+                    </div>
+                )
+            }
+            
+
+            ReactDOM.render(<UsersToDo/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                1. Create a component called as RandomNumbers
+                2. Maintain state variable called as numbers
+                3. Display a count of numbers
+                4. Display a button on the screen called as "Add"
+                5. When the user clicks the button, generate a random number and add it to state
+            */
+            const {useState}=React
+
+            const RandomNumbers=(props)=>{
+                const [numbers,setNumbers]=useState([])
+
+                //callback
+                const addItem=()=>{
+                    const random=Math.round(Math.random()*100)
+                    const newNumbers=[...numbers,random] //deep copy and push
+                    setNumbers(newNumbers)
+                }
+
+
+                return(
+                    <div>
+                        <h1>Total - {numbers.length}</h1>
+
+                        <button onClick={ addItem }>
+                            Add
+                        </button>
+
+                        <ul>
+                            {numbers.map( (ele,i)=>{
+                                return(
+                                    <li key={i}> 
+                                        {ele} 
+                                    </li>
+                                )  
+                            })}
+                        </ul>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<RandomNumbers/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

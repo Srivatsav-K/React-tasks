@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            user-status-indicator
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                Create multiple components LoginTrue, LoginFalse, UserStatus and App
+                LoginTrue component returns green dot image (see notes below)
+                LoginFalse component returns red dot image (see notes below)
+                UserStatus component will return the appropriate Login component depending on the status of login and also the name of the user in h2
+                You are provided an array of users and their login status
+                Pass each of the user info the UserStatus component by mapping
+                Render the UserStatus component inside the App component
+                
+                Notes
+                green dot - https://i.ibb.co/cNfHy3b/green-dot.png
+                red dot - https://i.ibb.co/jhPVt09/red-dot.png
+            */
+
+            const App=(props)=>{
+                const users = [
+                    { id: 1, name: 'adam', isLoggedIn: false }, 
+                    { id: 2, name: 'steve', isLoggedIn: true }, 
+                    { id: 3, name: 'dona', isLoggedIn: true }, 
+                    { id: 4, name: 'kumar', isLoggedIn: false } 
+                ]
+
+                return(
+                    <div>
+                        <h1>User Login Status</h1>
+                        {users.map(ele=>{                   //each object in each iteration will be copied. value of props will be entire object
+                            return <UserStatus key={ele.id} {...ele}/> //users={{...ele}}
+                        })}
+                    </div>
+                )
+            }
+
+            const UserStatus=(props)=>{
+                //console.log(props) //{id: 1, name: 'adam', isLoggedIn: false}
+                const {isLoggedIn,name}=props
+
+                return isLoggedIn ? <h2><LoginTrue/> {name}</h2> : <h2><LoginFalse/> {name}</h2>
+            }
+
+            const LoginTrue=(props)=>{
+                return <img src="https://i.ibb.co/cNfHy3b/green-dot.png" alt="green-dot"/>
+            }
+
+            const LoginFalse=(props)=>{
+                return <img src="https://i.ibb.co/jhPVt09/red-dot.png" alt="red-dot"/>
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

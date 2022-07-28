@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                Create components called as UserStatus and App
+                The UserStatus should return the status of the user login into the system
+                The message not logged in or logged in depending on the property isLoggedIn should be displayed in bold
+                Render the UserStatus once for each of the user object
+            */
+
+            const UserStatus=(props)=>{
+                const {user}=props
+
+                const status= (user.isLoggedIn) ?  'logged in' : 'not logged in'
+
+                return( <p>{user.name} is currently <b>{status}</b> the system</p> )
+            }
+
+            const App=(props)=>{
+
+                const user1 = { id: 1, name: 'adam', isLoggedIn: false }
+                const user2 = { id: 2, name: 'steve', isLoggedIn: true }
+
+                return(
+                    <div>
+                        <h1>User Login Status</h1>
+                        <UserStatus user={user1} />
+                        <UserStatus user={user2} />
+                    </div>
+                )
+            }
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

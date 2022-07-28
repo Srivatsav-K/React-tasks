@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Lifting State Up
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const {useState}=React
+
+            const EmployeeStats=(props)=>{
+                const {employees}=props
+
+                const maleEmployees=employees.filter(ele=> ele.gender==='male')
+                const femaleEmployees=employees.filter(ele=> ele.gender==='female')
+
+                return(
+                    <div>
+                        <h1>Employee Statistics</h1>
+                        <table border='1'>
+                            <thead>
+                                <tr>
+                                    <th>Gender</th>
+                                    <th>Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Male</td>
+                                    <td>{maleEmployees.length}</td>
+                                </tr>
+                                <tr>
+                                    <td>Female</td>
+                                    <td>{femaleEmployees.length}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                )
+            }
+
+            const Employeelist=(props)=>{
+                const {employees,remove}=props
+                return(
+                    <div>
+                        <h1>Listing Employees - {employees.length} </h1>
+                        <ul>
+                            {employees.map(ele=>{
+                                return(
+                                    <li key={ele.id} >{ele.name}
+                                        <button onClick={ ()=>{remove(ele.id)} }>remove</button>
+                                    </li>  
+                                )
+                            })}
+                        </ul>
+                    </div>
+                )
+            }
+
+            const EmployeeContainer=(props)=>{
+                const [employees,setEmployees]=useState(
+                    [
+                        {id:1, name:'Employee1', gender:'male'},
+                        {id:2, name:'Employee2', gender:'male'},
+                        {id:3, name:'Employee3', gender:'male'},
+                        {id:4, name:'Employee4', gender:'female'},
+                        {id:5, name:'Employee5', gender:'female'},
+
+                    ]
+                )
+
+                const remove=(id)=>{
+                    const result=employees.filter(ele=>{
+                        return ele.id != id
+                    })
+                    setEmployees(result)
+                }
+                
+                return(
+                    <div>
+                        <Employeelist employees={employees} remove={remove}/>
+                        <EmployeeStats employees={employees}/>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<EmployeeContainer/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

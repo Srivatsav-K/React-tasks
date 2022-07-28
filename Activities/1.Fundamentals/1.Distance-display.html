@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Distance Dispaly</title>
+    </head>
+
+    <body>
+        <div id="root"></div>
+        <script src="E:\DCT\REACT\Fundamentals\JS\react.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\react-dom.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.querySelector('#root')
+
+            const data={
+                source:'Bangalore',
+                destination:'Mysore',
+                distance:'140 kms',
+                time:'3 hours 30 mins'
+            }
+
+            const ele=<h1 style={{color:'red'}}>The distance between {data.source} and {data.destination} is {data.distance} and the time taken to travel is {data.time}</h1>
+
+            const ele1=<h1> {data} </h1> // we cannot access/print the entire object. (Objects are not valid as a React child.If you meant to render a collection of children, use an array instead.)
+
+            ReactDOM.render(ele,rootHandle)
+
+        </script>
+    </body>
+
+</html>

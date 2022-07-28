@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Create components called as NumberColor and App
+                Render the NumberColor component twice inside an App component
+                Once pass a even number and another time pass odd number
+                If the number is an even number then the NumberColor component should render number in red or yellow
+            */
+
+            const NumberColor=(props)=>{
+                const {number}=props
+
+                let numberColor
+                if(number%2==0){
+                    numberColor=(
+                        <div>
+                            <h1>Even Number</h1>
+                            <h1 style={{color:'red'}}>{number}</h1>
+                        </div>
+                    )
+                }else{
+                    numberColor=(
+                        <div>
+                            <h1>Odd Number</h1>
+                            <h1 style={{color:'yellow'}}>{number}</h1>
+                        </div>
+                    )
+                }
+
+                return numberColor
+            }
+
+            const App=(props)=>{
+                return(
+                    <div>
+                        <NumberColor number={10}/>
+                        <NumberColor number={11}/>
+                    </div>
+                )
+            }
+
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

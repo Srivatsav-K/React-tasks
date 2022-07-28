@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root" style="text-align: center;">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                REMOVE FUNCTIONALITY
+
+                1.Declare a function - removeItem (callback function) inside the MyCart. as it should be declared where the state variable resides.
+                2.Pause the function as prop to the child component (CartItem)
+                3.write an evevnt handler for the remove button inside the CartItem.
+                4.Invoke the function (removeItem) by passing the id
+                5.Inside the function, write logic to remove the item from the cart.
+                6.Update the state
+
+                INCREMENT QUANTITY
+
+                1. Declare a function incQuantity (callback function) inside MyCart 
+                2. Pass the function as prop to the child component (CartItem) 
+                3. Write an event hander for the button inside the CartItem.
+                4. Invoke the function (incQuantity) by pass the id
+                5. Inside the function, write logic to update the quantity for the item
+                6. Update the state
+            */
+
+            //import useState from React
+            const {useState}=React
+
+            const data=[
+                {id:1,name:'marker',price:10,quantity:1},
+                {id:2,name:'scale',price:5,quantity:1},
+            ]
+
+            
+            const App=(props)=>{
+                
+                return(
+                    <div>
+                        <h1 style={{color:'red'}}>Cart Page</h1>
+                        <MyCart/>
+                    </div>
+                )
+            }
+
+            const MyCart=(props)=>{
+                //state variable-products
+                const [products,setProducts]=useState(data) //pass the data into state
+
+                //callback-calulate the total cart value
+                const calSum=()=>{
+                    const result=products.reduce((prevVal,currentVal)=>{
+                        return prevVal+ (currentVal.price * currentVal.quantity) //total = price * quantity
+                    },0)
+                    return result
+                }
+
+                //callback-for the remove button
+                const removeItem=(id)=>{
+                    const result=products.filter(ele=> ele.id!=id)
+                    setProducts(result)
+                }
+
+                //callback for decreasing quantity
+                const decQuantity=(id)=>{
+                    const result=products.map(ele=>{
+                        if(ele.id==id){
+                            return {...ele,quantity:ele.quantity-1}
+                        }else{
+                            return {...ele}
+                        }
+                    })
+                    setProducts(result)
+                }
+
+                //callback for increasing quantity
+                const incQuantity=(id)=>{
+                    const result=products.map(ele=>{
+                        if(ele.id==id){
+                            return {...ele,quantity:ele.quantity+1}
+                        }else{
+                            return {...ele}
+                        }
+                    })
+                    setProducts(result)
+                }
+
+                return(
+                    <div>
+
+                        <h2 style={{color:'blue'}} >My cart ({products.length})</h2>
+
+                        <hr/>
+                        
+                        {products.map(ele=>{    
+                                                
+                            return(
+                                <CartItems 
+                                    key={ele.id} 
+                                    {...ele} 
+                                    removeItem={removeItem} //pass the remove item callback function as a prop 
+                                    decQuantity={decQuantity} //pass the decQuantity callback function as a prop 
+                                    incQuantity={incQuantity} ////pass the incQuantity callback function as a prop 
+                                />
+                            ) 
+                        })}
+                        
+                        <PriceDetails totalItems={products.length} cartTotal={calSum()}/>
+
+                    </div>
+                )
+            }
+
+            const CartItems=(props)=>{
+                console.log(props)
+                //destructure the props
+                const {id,name,price,quantity,removeItem,decQuantity,incQuantity}=props 
+                
+                return( 
+                    <div>
+                        <b>Name - {name}</b> {/*BOLD*/}
+                        <p>INR - {price}</p>
+                        <h5>quantity - {quantity}</h5>
+
+                        {/*//////disabled property//////////////disabled={true}-----> disables the button*/}
+                        <button onClick={()=>{decQuantity(id)}} disabled={quantity===1}>-</button> 
+                            {quantity} 
+                        <button onClick={()=>{incQuantity(id)}}>+</button> 
+
+                        {/*Invoke the function on click*/}
+                        <button onClick={()=>{removeItem(id)}} style={{margin:'10px'}} >
+                            remove
+                        </button>
+
+                        <hr/>
+                    </div>
+                )
+            }
+
+            const PriceDetails=(props)=>{
+                //destructure props
+                const {totalItems, cartTotal}=props
+                const deliveryCharge=50
+
+                return(
+                    <div>
+                        <h3 style={{color:'blue'}} >Price Details</h3>
+
+                        <b> Price ({totalItems} items) - {cartTotal}</b> <br/>
+
+                        <b> Delivery Charge - {deliveryCharge} </b> <br/>
+
+                        {/*total price = cartTotatl + deliveryCharge*/}
+                        <b>Cart total - {cartTotal + deliveryCharge}</b> <br/>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

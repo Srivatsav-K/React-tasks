@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Display First & Last Element 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           /*
+                Create a component called as TasksList
+                You are provided with an array of tasks
+                Pass the full tasks array as a prop to the component
+                The component renders a div with 2 buttons
+                first task
+                last task
+                When a user clicks on the button "first task", display the first task in the array
+                When a user clicks on the button "last task", display the last task in the array ( the array length can vary, don't hardcode the last index value )
+                The event handler function needs to be declared inside the component
+           */
+
+           const tasks = [
+                { id: 1, title: 'Task 1', isCompleted: true },
+                { id: 2, title: 'Task 2', isCompleted: true },
+                { id: 3, title: 'Task 3', isCompleted: false }
+            ]
+
+            const TasksList=(props)=>{
+                const first=()=>{
+                    alert(props.data[0].title)
+   
+                }
+                const last=()=>{
+                    alert(props.data[props.data.length-1].title)
+                }
+                return (
+                    <div>
+                        <button onClick={first}>First Task</button>
+                        <br/> <br/>
+                        <button onClick={last}>Last Task</button>
+                    </div>
+                )
+            }
+           
+            const ele=<TasksList data={tasks}/>
+
+           ReactDOM.render(ele,rootHandle)
+           
+        </script>
+    </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Create a controller component called as VowelSkip
+                There is only one text area as the input field
+                Only non vowels needs to accepted by the input field
+            */
+
+            const {useState}=React
+
+            const DisplayCap=(props)=>{
+                const [text,setText]=useState('')
+                const [withoutVowels,setWithoutVowels]=useState('')
+
+                const handleTextChange=(e)=>{
+                    const input=e.target.value
+                    const vowels='aeiou'
+                    setText(input)  
+
+                    let result=''
+                    for(let i=0;i<input.length;i++){
+                        if(!vowels.includes(input[i])){
+                            result+=input[i]
+                        }else{
+                            result+=''
+                        }
+                    }
+                    setWithoutVowels(result)
+                }
+
+                return(
+                    <div>
+                        <h1>Text Without Vowels</h1>
+
+                        <h2>{withoutVowels}</h2>
+
+                        <form>
+                            <textarea value={text} onChange={handleTextChange}></textarea>
+                        </form>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<DisplayCap/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

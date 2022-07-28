@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                You are provided with an array of employees info
+                Display them in a table format
+                Next to each employee, provide a checkbox input
+                When we click on the checkbox associated with an employee, show them as the selected employee
+            */
+            const {useState}=React
+            
+
+            const SelectEmployees=(props)=>{
+                const [users,setUsers]=useState([
+                    { id: 1, name: 'emp11', email: 'emp11@gmail.com', selected: false },
+                    { id: 2, name: 'emp12', email: 'emp12@gmail.com', selected: false },
+                    { id: 3, name: 'emp13', email: 'emp13@gmail.com', selected: false },
+                    { id: 4, name: 'emp14', email: 'emp14@gmail.com', selected: false }
+                ])
+
+                const [selectedEmployees,setSelectedEmployees]=useState([])
+                
+                const handleSelected=(e)=>{
+                    const newUsers=[...users]
+                    const id=e.target.id
+                    const checked=e.target.checked
+
+                    //selection in table
+                    const result=newUsers.map(ele=>{
+                        if(ele.id==id){
+                            //console.log(ele.name)
+                            return {...ele,selected:checked}
+                        }else{
+                            return {...ele}
+                        }
+                    })
+                    setUsers(result)
+
+                    //selected employees
+                    const selectedUsers=result.filter(ele=>{
+                        return ele.selected
+                    })
+                    setSelectedEmployees(selectedUsers)
+                }
+
+                return(
+                    <div>
+                        <h1>Listing Employees {users.length}</h1>
+
+                        <table border='1'>
+
+                            <thead>
+                                <tr>
+                                    {Object.keys(users[0]).map((ele,i)=>{
+                                        return(
+                                            <th key={i}>{ele}</th>
+                                        )
+                                    })}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {users.map(ele=>{
+                                    return(
+                                        <tr key={ele.id}>
+                                            <td>{ele.id}</td>
+                                            <td>{ele.name}</td>
+                                            <td>{ele.email}</td>
+                                            <td>
+                                                <input type='checkbox' value={ele.name} id={ele.id} checked={ele.selected} onChange={handleSelected} />
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+
+                        <h1>Selected Employees</h1>
+                        <ul>
+                            {selectedEmployees.map(ele=>{
+                                return(
+                                    <li key={ele.id}>{ele.name}</li>
+                                )
+                            })}
+                        </ul>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<SelectEmployees/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

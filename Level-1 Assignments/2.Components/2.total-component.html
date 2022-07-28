@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Total Component 
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           /*
+            Create a component called as Total
+            Pass prices as a prop value to the component
+            Return a h1 element, which shows the total of prices
+            You are given an array of values
+           */
+          
+           const prices = [150,250,200,400]
+
+           function Total(props){
+               //console.log(props)
+               let result=0
+               props.prices.forEach(ele=>result+=ele)
+               return <h1>Total Bill = {result}</h1>
+           }
+
+           const ele=<Total prices={prices}/>
+
+           ReactDOM.render(ele,rootHandle)
+           
+        </script>
+    </body>
+</html>

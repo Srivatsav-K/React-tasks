@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Fetch all the users information from the provided API using the axios package
+                Display the users info as options within a select tag
+                After a user is selected from the drop down, fetch all the todo's (tasks) of the user and display as a list.
+                You need to display the title
+                If the todo(task) is completed strike it out, else display normal text
+                Be informed that you need to make 2 api calls, once to get all the users information after the component is rendered, and another api call once a user is selected
+            */
+
+            const {useState,useEffect}=React
+
+            const UserToDo=(props)=>{
+                const [users,setUsers]=useState([])
+                const [userInput,setUserInput]=useState('')
+                const [tasks,setTasks]=useState([])
+
+                useEffect(()=>{
+                    axios.get('https://jsonplaceholder.typicode.com/users')
+                        .then((usersData)=>{
+                            setUsers(usersData.data)
+                        })
+                },[])
+
+                const handleSelectChange=(e)=>{
+                    setUserInput(e.target.value)
+                }
+                
+                useEffect(()=>{
+                    axios.get(`https://jsonplaceholder.typicode.com/todos?userId=${userInput}`)
+                        .then((tasksData)=>{
+                            setTasks(tasksData.data)
+                            //console.log(tasksData.data)
+                        })
+                },[userInput])
+
+                return(
+                    <div>
+                        <label>Users: </label>
+                        <select value={userInput} onChange={handleSelectChange} >
+                            <option value=''>select user</option>
+
+                            {users.map(ele=>{
+                                return(
+                                    <option value={ele.id} key={ele.id}> {ele.name} </option>
+                                )
+                            })}
+                        </select>
+
+                        {tasks.length>0 && 
+                            <div>
+                                <h1>Listing Tasks</h1>
+
+                                <ul>
+                                    {tasks.map(ele=>{
+                                        return(
+                                            <li key={ele.id}> {ele.completed ? <s>{ele.title}</s> : ele.title } </li>
+                                        )
+                                    })}
+                                </ul>
+
+                            </div>
+                        }
+                    </div>
+                )
+            }
+            
+            ReactDOM.render(<UserToDo/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

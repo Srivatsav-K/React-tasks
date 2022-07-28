@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                You are provided with a list of colors
+                Display the colors in a drop down
+                When the user selects a color, change the background of the page to the selected colors.
+                The colors are red, green, yellow, black, pink, orange
+            */
+
+            const {useState,useEffect}=React
+
+            const BackgroungColor=(props)=>{
+                const [color,setColor]=useState('')
+
+                const handleColorChange=(e)=>{
+                    setColor(e.target.value)
+                }
+
+                useEffect(()=>{
+                    document.body.style.backgroundColor=color
+                },[color])
+
+
+                return(
+                    <select value={color} onChange={handleColorChange}>
+                        <option value="">Choose Background Color</option>
+                        <option value="red">Red</option>
+                        <option value="green">Green</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="black">black</option>
+                        <option value="pink">pink</option>
+                        <option value="orange">orange</option>
+                    </select>
+                )
+            }
+            
+            ReactDOM.render(<BackgroungColor/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

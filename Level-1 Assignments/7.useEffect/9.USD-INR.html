@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Get the latest dollar amount from api (look at hint)
+                Provide a slider for the user to choose input
+                Min value of slider is 0 and max value is 100
+                Display the converted value of INR
+            */
+            const {useState,useEffect}=React
+
+            const CurrencyConvertor=(props)=>{
+                const [EUR,setEUR]=useState(0)
+                const [USD,setUSD]=useState(0)
+                const [eurToUsdRate,setEurToUsdRate]=useState(0)
+                
+                const handleSliderChange=(e)=>{
+                    setEUR(e.target.value)
+                    setUSD((eurToUsdRate * e.target.value).toFixed(2) )
+                }
+
+                useEffect(()=>{
+                    axios.get('http://api.exchangeratesapi.io/v1/latest?access_key=b359ce4c54bda80fe2172357a6307fa8&base=EUR&symbols=USD')
+                        .then((exchangeRate)=>{
+                            setEurToUsdRate(exchangeRate.data.rates.USD)
+                        })
+                },[])
+                
+                return(
+                    <div>
+                        <h1>Currency Convertor</h1>
+                        <hr/>
+                        <h2>EUR - {EUR}  </h2>
+                        <h2>USD - {USD} </h2>
+                        
+                        <input type="range" value={EUR} onChange={handleSliderChange}/>
+
+                        <p>Note : 1 EUR = {eurToUsdRate} </p>
+                    </div>
+                )
+            }
+
+            
+            ReactDOM.render(<CurrencyConvertor/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

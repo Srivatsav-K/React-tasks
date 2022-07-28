@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Contact Manager V2
+    </title>
+</head>
+
+<body>
+    <div id="root">
+
+    </div>
+
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/validator/13.7.0/validator.js"
+        integrity="sha512-WIgvLZy7x26YVNQDCjFEzVnV16blFpQqduha3HtJkjlTkAFb1Qy8KZ1fP3YUqcG4ZmtaUPCFZgLNetLptt/nyQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="text/babel">
+        const rootHandle = document.getElementById('root')
+        const {useState} = React 
+
+        const Heading = (props) => {
+            const { title } = props 
+            return <h1> { title } </h1> 
+        }
+
+        const SubHeading = (props) => {
+            const { title } = props 
+            return <h2> { title } </h2> 
+        }
+
+        const Table = (props) => {
+            const {data, handleRemove} = props 
+            return <table>
+                <thead>
+                    <tr>
+                        <th> id </th> 
+                        <th> name </th> 
+                        <th> mobile </th> 
+                        <th> email </th> 
+                        <th> type </th> 
+                        <th> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((ele) => {
+                        return (
+                            <tr key={ele.id}>
+                                <td> {ele.id} </td>
+                                <td> {ele.name} </td>
+                                <td> {ele.mobile} </td>
+                                <td> {ele.email} </td>
+                                <td> {ele.type} </td>
+                                <td> <button onClick={() => {
+                                   handleRemove(ele.id)
+                                }}> remove </button>  - edit </td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
+        }
+       
+        function Search(props) {
+            const { searchValue, setSearchValue } = props 
+
+            const handleChange = (e) => {
+                setSearchValue(e.target.value)
+            }
+
+            return <input
+                type="text"
+                placeholder="search by name or mobile"
+                value={searchValue}
+                onChange={handleChange}
+                name="search"
+            /> 
+        }
+
+        const ContactForm = (props) => {
+            const {addContact} = props 
+            const [name, setName] = useState('')
+            const [mobile, setMobile] = useState('')
+            const [email, setEmail] = useState('')
+            const [type, setType] = useState('')
+            const [formErrors, setFormErrors] = useState({})
+            const errors = {}
+
+            const runValidations = () => {
+                // name 
+                if (name.length === 0) {
+                    errors.name = 'can\'t be blank'
+                }
+
+                // mobile 
+                if (mobile.length === 0) {
+                    errors.mobile = `can't be blank`
+                } else if (!validator.isNumeric(mobile)) {
+                    errors.mobile = 'should be a number'
+                } else if (mobile.length != 10) {
+                    errors.mobile = 'should be 10 digits'
+                }
+
+                // email 
+                if (email.length === 0) {
+                    errors.email = "can't be blank"
+                } else if (!validator.isEmail(email)) {
+                    errors.email = 'invalid email format'
+                }
+            }
+
+            const resetFields = () => {
+                setName('')
+                setMobile('')
+                setEmail('')
+                setType('')
+            }
+
+            const handleChange = (e) => {
+                const name = e.target.name
+                const inputValue = e.target.value
+                if (name === 'name') {
+                    setName(inputValue)
+                } else if (name === 'mobile') {
+                    setMobile(inputValue)
+                } else if (name === 'email') {
+                    setEmail(inputValue)
+                } else if (name === 'type') {
+                    setType(inputValue)
+                } else if (name === 'search') {
+                    setSearch(inputValue)
+                }
+            }
+
+            const handleSubmit = (e) => {
+                e.preventDefault()
+                const formData = {
+                    id: Number(new Date()),
+                    name: name,
+                    mobile: mobile,
+                    email: email,
+                    type: type
+                }
+                // console.log(formData)
+                // run form validations 
+                // if validations pass, add the formData to the state variable & then reset your fields 
+                runValidations()
+
+                if (Object.keys(errors).length === 0) {
+                    addContact(formData)
+                    setFormErrors({})
+                    resetFields()
+                } else {
+                    setFormErrors(errors)
+                }
+            }
+
+            return (
+                <div> 
+                    <SubHeading title="Add Contact" /> 
+                    <form onSubmit={handleSubmit}>
+                        <label htmlFor="name"> Name </label> <br />
+                        <input type="text" name="name" id="name" value={name} onChange={handleChange} />
+                        {formErrors.name && <span> {formErrors.name} </span>}
+                        <br />
+
+                        <label htmlFor="mobile"> Mobile </label> <br />
+                        <input type="number" name="mobile" id="mobile" value={mobile} onChange={handleChange} />
+                        {formErrors.mobile && <span> {formErrors.mobile} </span>}
+                        <br />
+
+                        <label htmlFor="email"> Email </label> <br />
+                        <input type="text" name="email" id="email" value={email} onChange={handleChange} />
+                        {formErrors.email && <span> {formErrors.email} </span>}
+                        <br />
+
+                        <label htmlFor="type"> Type </label> <br />
+                        <select value={type} name="type" onChange={handleChange}>
+                            <option value="">Select</option>
+                            <option value="personal">Personal</option>
+                            <option value="office">Office</option>
+                        </select> <br />
+
+                        <input type="submit" value="submit" />
+                    </form> 
+                </div> 
+            )
+        }
+
+        const App = (props) => {
+            const [contacts, setContacts] = useState([
+                { id: 1, name: 'ani', mobile: '9876543211', email: 'a@gmail.com', type: 'personal' }
+            ])
+            const [searchValue, setSearchValue] = useState('')
+
+            const filterContacts = () => {
+                return contacts.filter(ele => ele.name.includes(searchValue) || ele.mobile.includes(searchValue) || ele.email.includes(searchValue))
+            }
+
+            const addContact = (formData) => {
+                 const newContacts = [...contacts, formData]
+                setContacts(newContacts)
+            }
+
+            const handleRemove = (id) => {
+                const newContacts = contacts.filter((ele) => {
+                    return ele.id != id
+                })
+                setContacts(newContacts)
+            }
+
+            return (
+                <div> 
+                    <Heading title="Contact Manager App" /> 
+                    <SubHeading title={`Listing Contacts - ${contacts.length}`} /> 
+
+                    {
+                        contacts.length > 0 ? (
+                            <div> 
+                                <Search searchValue={searchValue} setSearchValue={setSearchValue} /> 
+                                <Table 
+                                    data={filterContacts()}
+                                    handleRemove={handleRemove} 
+                                />
+                            </div> 
+                        ) : ( <SubHeading 
+                                    title="No contacts found.Add your first contact"
+                               /> )
+                    }
+
+                    <ContactForm addContact={addContact} /> 
+                </div> 
+            )
+        }
+
+        ReactDOM.render(<App />, rootHandle)
+    </script>
+</body>
+
+</html>

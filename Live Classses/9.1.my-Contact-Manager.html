@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const {useState}=React
+
+            const Heading=(props)=>{
+                const {title}=props
+                return <h1>{props.title}</h1>
+            }
+
+            const SubHeading=(props)=>{
+                const {title}=props
+                return <h2>{title}</h2>
+            }
+
+            const Search=(props)=>{
+                const {search,handleSearch,placeholder}=props
+                return(
+                    <input type='text' value={search} onChange={handleSearch} placeholder={placeholder} />
+                )
+            }
+
+            const Table=(props)=>{
+                const {contacts,handleRemove}=props
+                return(
+                    <table border='1'>
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>Name</th>
+                                <th>Mobile</th>
+                                <th>Email</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {contacts.map(ele=>{
+                                return(
+                                    <tr key={ele.id}>
+                                        <td>{ele.id}</td>
+                                        <td>{ele.name}</td>
+                                        <td>{ele.mobile}</td>
+                                        <td>{ele.email}</td>
+                                        <td>{ele.type}</td>
+
+                                        <td><button onClick={ ()=>{ handleRemove(ele.id)} } > remove </button> - edit</td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                )
+            }
+
+            const App=(props)=>{
+                const [search,setHandleSearch]=useState('')
+                const [contacts,setContacts]=useState([
+                    {id:1,name:'sri',mobile:'9999999999',email:'sri@gmail.com',type:'personal'},
+                    {id:2,name:'nik',mobile:'9999999999',email:'sri@yahoo.com',type:'personal'}
+                ])
+                
+                //callback
+                const handleSearch=(e)=>{
+                    const input=e.target.value
+                    setHandleSearch(input)
+                }
+
+                const filteredContacts=contacts.filter(ele=>{
+                    return (ele.name.includes(search) || ele.mobile.includes(search) || ele.email.includes(search))
+                })
+
+                //handle button remove
+                const handleRemove=(id)=>{
+                    const result=contacts.filter(ele=>{
+                        return ele.id != id
+                    })
+                    setContacts(result)
+                }
+
+                return(
+                    <div>
+                        <Heading title='Contact Manager App' />
+                        <SubHeading title={`Listing Contacts - ${filteredContacts.length} of ${contacts.length}`} />
+                        {
+                            contacts.length>0 ?
+                            (
+                                <div>
+                                    <Search search={search} handleSearch={handleSearch} placeholder='search by name, mobile or email' />
+                                    { filteredContacts.length>0 ? <Table contacts={filteredContacts} handleRemove={handleRemove}/> : <h3>No Matching Contacts Found</h3> }
+                                </div>
+                            ):
+                            <SubHeading title='No Matching Contacts Found. Add your First Contact.'/>
+                        }
+                        <SubHeading title='Add Contact'/>
+                    </div>
+                )
+            }
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

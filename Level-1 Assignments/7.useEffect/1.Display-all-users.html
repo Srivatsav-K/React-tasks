@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Display all users
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Create a UsersTable component
+                Fetch all the users information from the provided API using the axios package
+                Display the data in the table format
+                The table should display the following information
+                    id
+                    name
+                    email
+                    city
+                    position (lat,lng)
+            */
+
+            const {useState,useEffect}=React 
+
+            const UsersTable=(props)=>{
+                const [users,setUsers]=useState([])
+
+                useEffect(()=>{
+                    axios.get('https://jsonplaceholder.typicode.com/users')
+                        .then((ppl)=>{
+                            //console.log(users)
+                            setUsers(ppl.data)
+                        })
+                },[])
+
+                
+                return(
+                    <div>
+                        <h1>Listing Users - {users.length}</h1>
+                        
+                        <table border='1'>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>City</th>
+                                    <th>Position</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {users.map(ele=>{
+                                    return(
+                                        <tr key={ele.id}>
+                                            <td>{ele.id}</td>
+                                            <td>{ele.name}</td>
+                                            <td>{ele.email}</td>
+                                            <td>{ele.address.city}</td>
+                                            <td>{ele.address.geo.lat}, {ele.address.geo.lng} </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<UsersTable/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

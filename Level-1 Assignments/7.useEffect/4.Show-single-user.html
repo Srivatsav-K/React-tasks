@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Fetch only the user by the id from the provided API using the axios package. ( Id can range between 1 to 10, as there only 10 users information provided by the backend api )
+                If you need to find all the users then the url is https://jsonplaceholder.typicode.com/users but if you need to find a single user then the url is https://jsonplaceholder.typicode.com/users/:id (:id is to be replaced by a number)
+                Display it's data like the name, email and city below
+            */
+
+            const {useState,useEffect}=React
+
+            const DisplayUser=(props)=>{
+                const [user,setUser]=useState({})
+
+                useEffect(()=>{
+                    axios.get('https://jsonplaceholder.typicode.com/users/1')
+                        .then((personDetails)=>{
+                            setUser(personDetails.data)
+                        })
+                },[])
+ 
+                // Initially, user is an empty obj. So, user.address is undefined can't call city on undefined.
+                // after user is set to the data fetched from api then address property is available.
+                return(
+                    <div>
+                        <h1>{Object.keys(user).length>0 && `${user.name} - ${user.email} - ${user.address.city}` }</h1>
+                    </div>
+                )
+            }
+            
+            ReactDOM.render(<DisplayUser/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            tasks-color
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                Create components called as TasksColorList and App
+                You are provided with an array of tasks
+                Pass all the tasks as prop
+                The TasksColorList component is supposed to return an ul list which contains all the tasks
+                If a task is completed then the task needs to be displayed in green, else display just the title in red
+
+            */
+
+            const TasksList=(props)=>{
+                const {tasks} = props
+                return(
+                    <div>
+                        <h1>Listing Tasks - {tasks.length}</h1>
+                        <ul>
+                            {tasks.map(ele=>{
+
+                                return(
+                                    (ele.completed) ? 
+                                    ( <li key={ele.id} style={{color:'green'}}> {ele.title} </li> ) : 
+                                    ( <li key={ele.id} style={{color:'red'}}> {ele.title} </li> )
+                                )  
+                                                            
+                            })}
+                        </ul>
+                    </div>
+                )
+            }
+
+            const App=(props)=>{
+
+                const tasks = [
+                    { id: 1, title: 'Task 1', completed: true },
+                    { id: 2, title: 'Task 2', completed: false },
+                    { id: 3, title: 'Task 3', completed: true }
+                ]
+
+                return(
+                    <TasksList tasks={tasks}/>
+                )
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                1.Get the current users location (latitude, longitude)
+                2.Display the latitude, longitude on the webpage
+                3.After the component is rendered, automatical ask for location
+                4.There should also be button, which when clicked, will help us determine the location of the user
+                5.Display the name of the city
+                    Hint -
+
+                    1.Explore the navigator object provided by the browsers
+                            navigator.geolocation
+                            navigator.geolocation.getCurrentPosition(showPosition)
+                            //navigator.geolocation.getCurrentPosition((data)=>console.log(data))
+
+                    2.Keep in mind that that the navigator object only provides the latitude and longitude and not the city information
+                    3.Use an api service provider like http://www.locationiq.com to get the name of the city. ( you will be required to sign up with the website before using their services. Read their API documentation to understand how to work with their services)
+            */
+
+            const {useState,useEffect}=React
+
+            const UserLocation=(props)=>{
+                const [latitude,setLatitude]=useState('')
+                const [longitude,setLongitude]=useState('')
+                const [city,setCity]=useState('')
+
+                const showPosition=(position)=>{
+                    //console.log('position',position)
+                    setLatitude(position.coords.latitude)
+                    setLongitude(position.coords.longitude)
+                }
+
+                const getLocation=()=>{
+                    if(navigator.geolocation){
+                        navigator.geolocation.getCurrentPosition(showPosition)
+                    }else{
+                        alert('Geolocation is not supported by the browser')
+                    }
+                }
+
+                useEffect(()=>{
+                    latitude && longitude && axios.get(`https://us1.locationiq.com/v1/reverse.php?key=pk.093c21f3ef1292fc2d4fd7616deedc37&lat=${latitude}&lon=${longitude}&format=json`)
+                        .then((locationData)=>{
+                            setCity(locationData.data.address.city)
+                            //console.log(locationData.data.address.city)
+                            //console.log(locationData.status,locationData.statusText)
+                        })
+                        .catch((err)=>{
+                            console.log(err.response.data)
+                        })
+                },[latitude,longitude])
+
+                return(
+                    <div>
+                        <h1>Geo Location</h1>
+                        <hr/>
+                        <b>Latitude - {latitude} </b> <br/> <br/>
+
+                        <b>Longitude - {longitude}</b> <br/> <br/>
+
+                        <b>City - {city}</b> <br/> <br/>
+
+                        <button onClick={getLocation()} >
+                            Get Location
+                        </button>
+                    </div>
+                )
+            }
+            
+            ReactDOM.render(<UserLocation/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

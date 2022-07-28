@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                You are provided with a list of tasks information
+                Your task is to allow the user to mark a task as complete
+                A task is said to be completed, when he selects the checkbox associated with task
+                When a task is complete, strike through the text
+                Display the Progress of completion using HTML progress tag
+                Components to be created
+                    App
+                    TasksContainer
+                    TasksList
+                    ProgressBar
+            */
+            const {useState}=React
+
+            const ProgressBar=(props)=>{
+                const  {tasks}=props
+
+                const updateProgress=()=>{
+                    // let count=0
+                    // tasks.forEach(ele=>{
+                    //     if(ele.completed){
+                    //         count+=1
+                    //     }
+                    // })
+                    const sum=tasks.reduce((prev,current)=>{
+                        console.log('prev',prev,'current',current)
+                        if(current.completed){
+                            return prev+1
+                        }else{
+                            return prev
+                        }
+                    },0)
+                    console.log(sum)
+                    const result=sum*(100/tasks.length)
+                    return(result)
+                }
+
+                return(
+                    <progress max='100' value={updateProgress()}> </progress>
+                )
+            }
+
+            const TasksList=(props)=>{
+                const {tasks,handleCompleted}=props
+
+                return(
+                    <div>
+                        <ul>
+                            {tasks.map(ele=>{
+                                return(
+                                    <li key={ele.id}>
+                                        <input type='checkbox' checked={ele.completed} onChange={handleCompleted} id={ele.id}/>
+                                        <label htmlFor={ele.id}>{ ele.completed ? <s>{ele.title}</s> : ele.title }</label>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </div>
+                )
+            }
+
+            const TasksContainer=(props)=>{
+                const [tasks,setTasks]=useState([
+                    { id: 1, title: 'get the website live', completed: true },
+                    { id: 2, title: 'work on user validation', completed: false },
+                    { id: 3, title: 'Automate the deployment process', completed: false }
+                ])
+                
+                //onChange event hander
+                const handleCompleted=(e)=>{
+                    const newTasks=[...tasks]
+                    const result=newTasks.map(ele=>{
+                        if(ele.id==e.target.id){
+                            return {...ele,completed:e.target.checked}
+                        }else{
+                            return {...ele} 
+                        }
+                    })
+                    setTasks(result)
+                }
+
+                //callback
+                
+
+                return(
+                    <div>
+                        <h1>Listing Tasks - {tasks.length}</h1>
+                        <ProgressBar tasks={tasks}/>
+                        <TasksList tasks={tasks} handleCompleted={handleCompleted}/>
+                    </div>
+                )
+            }
+
+            const App=(props)=>{
+                return(
+                    <TasksContainer/>
+                )
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

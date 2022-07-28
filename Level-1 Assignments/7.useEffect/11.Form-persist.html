@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                Create a controlled component
+                When writing long text, we sometimes need a functionality where we can come back and continue where we left of.
+                Enable a functionality where even if the page is closed or the page is reloaded, the text the user has entered is present in the input fields
+                In case of form submission, the data should be cleared
+                Also provide a button on the page, when the user clicks on the button, reload the page (hint - explore the window object reload method)
+
+                // Reload the current resources from the server
+                    window.location.reload(true);
+
+                // Reload the current resources from the browser's cache
+                    window.location.reload();
+            */
+
+            const {useState,useEffect}=React
+
+            const StoryBook=(props)=>{
+                const [title,setTitle]=useState( localStorage.getItem('Title') || '')
+                const [body,setBody]=useState( localStorage.getItem('Body') || '' )
+
+                const handleChange=(e)=>{
+                    const name=e.target.name
+                    const value=e.target.value
+
+                    if(name=='title'){
+                        setTitle(value)
+                    }else if(name=='body'){
+                        setBody(value)
+                    }
+                }
+
+                useEffect(()=>{
+                    if(title){
+                        localStorage.setItem('Title',title)
+                    }
+                },[title])
+                useEffect(()=>{
+                    if(body){
+                        localStorage.setItem('Body',body)
+                    }
+                },[body])
+
+
+                const handleSubmit=(e)=>{
+                    e.preventDefault()
+                    localStorage.clear()
+                    setTitle('')
+                    setBody('')
+                    console.log(localStorage)
+                }
+
+                
+
+                return(
+                    <div>
+                        <h1>Story Book</h1>
+
+                        <form onSubmit={handleSubmit} >
+                            <label htmlFor="title">Title</label> <br/>
+                            <input type="text" value={title} name='title' onChange={handleChange}/> <br/><br/>
+
+                            <label htmlFor="body">Body</label> <br/>
+                            <textarea value={body} onChange={handleChange} name="body"> </textarea> <br/><br/>
+
+                            <input type="submit" value='Save'/>
+                        </form>
+                        <br/>
+                        <input type="button" value='Reload' onClick={ ()=>{window.location.reload()} } />
+                    </div>
+                )
+            }
+            
+            ReactDOM.render(<StoryBook/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script src="E:\DCT\REACT\Fundamentals\JS\react.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\react-dom.development.js"></script>
+        <script src="E:\DCT\REACT\Fundamentals\JS\babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            
+            const products = [
+                { id: 1, name: 'iPhone 13', brand: 'Apple', storage: ['32gb', '64gb', '128gb']}, 
+                { id: 2, name: 'one plus 6t', brand: 'OnePlus', storage: ['64gb', '128gb'] }, 
+                { id: 3, name: 'note pro 10s', brand: 'Redmi', storage: ['64gb', '128gb'] }
+            ]
+
+            const ele=(
+                <table border='1'>
+                    <caption>Phones</caption>
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Model Name</th>
+                            <th>OEM</th>
+                            <th>Storage</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {products.map(ele=>{
+                            return(
+                                <tr key={ele.id}>
+                                    <td>{ele.id}</td>
+                                    <td>{ele.name}</td>
+                                    <td>{ele.brand}</td>
+                                    <td>
+                                        <ul>
+                                            {ele.storage.map((element,i)=> <li key={i}> {element} </li>)}
+                                        </ul>
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            )
+
+            ReactDOM.render(ele,rootHandle)
+
+        </script>
+
+    </body>
+</html>

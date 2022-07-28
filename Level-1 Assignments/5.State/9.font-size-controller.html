@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                1. Create a component called as FontController
+                2. Maintain initial size as, 50
+                3. Display 2 buttons "-" and "+"
+                4. Display the text where the font size is controller by inline style prop
+                5. When the user clicks on "-", decrement the size by 5 px
+                6. When the user clicks on "+", increment the size by 5 px
+
+                Bonus - Ensure that the size doesn't go below 20 px, alert the user
+            */
+            const {useState}=React
+
+            const FontController=(props)=>{
+                const [size,setSize]=useState(50)
+                const h1Style={fontSize:`${size}px`, display:'inline'}
+
+                //callback
+                const increment=()=>{
+                    setSize(size+5)
+                }
+
+                const decrement=()=>{
+                    if(size<20){
+                        alert('size cannot go below 20')
+                        // const result=confirm('Are you sure want to go below')
+                        // if(result){
+                        //     setSize(size-5) 
+                        // }
+                    }else{
+                        setSize(size-5)
+                    }
+                    
+                }
+
+                return(
+                    <div>
+                        <h1>Font Size Controller</h1>
+
+                        <button onClick={decrement}>
+                            -
+                        </button>
+
+                        <h1 style={h1Style}>
+                            Dct Academy
+                        </h1>
+
+                        <button onClick={increment}>
+                            +
+                        </button>
+                        
+                    </div>  
+                )
+            }
+
+            ReactDOM.render(<FontController/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

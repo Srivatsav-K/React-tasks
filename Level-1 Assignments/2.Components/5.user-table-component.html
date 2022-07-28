@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            user-table-components
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+           const rootHandle = document.getElementById('root')
+           
+           /*
+            Create a component called as UserTable
+            You are provided with a set of user information
+            Pass the users information as props to the component
+            Using the data return a table element from the component
+           */
+
+           const users = [
+                { id: 1, name: 'user1', email: 'u1@gmail.com'},
+                { id: 2, name: 'user2', email: 'u2@gmail.com' },
+                { id: 3, name: 'user3', email: 'u3@gmail.com' }
+            ]
+
+            const users1 = [
+                { id: 1, name: 'steve', email: 'steve@gmail.com'},
+                { id: 2, name: 'john', email: 'john@gmail.com' },
+                { id: 3, name: 'ana', email: 'ana@gmail.com' }
+            ]
+
+
+            function UserTable(props){
+                return(
+                    <div>
+
+                        <table border='1'>
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>name</th>
+                                    <th>email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {props.users.map(ele=>{
+                                    return(
+                                        <tr key={ele.id}>
+                                            <td>{ele.id}</td>
+                                            <td>{ele.name}</td>
+                                            <td>{ele.email}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+
+                        <br/>
+
+                    </div>
+                )
+            }
+
+            const ele=(
+                <div>
+                    <UserTable users={users}/>
+                    <UserTable users={users1}/>
+                </div>
+            )
+            ReactDOM.render(ele,rootHandle)
+           
+        </script>
+    </body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Restaurant App
+        </title>
+        <style>
+            .itemsContainer{
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .productStyle{
+                width:400px;
+                margin-left:20px;
+                border:1px solid black;
+                text-align: center;
+            }
+
+            .pictures{
+                width: 200px;
+                height: 200px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            const {useState,useEffect}=React
+            const textAlign={textAlign:'center'}
+
+            const OrderTypeButton=(props)=>{
+                const {eatInHandle,parcelHandle}=props
+                return(
+                    <div style={{textAlign:'center'}} >
+                        <button onClick={eatInHandle}>Eat In</button> 
+                        <button onClick={parcelHandle} >Parcel</button>
+                        <hr/> <hr/>
+                        <br/>
+                    </div>
+                )
+            }
+
+            const Categories=(props)=>{
+                const {handleCategory,handleCategoryAll}=props
+                return(
+                    <div>
+                        <button onClick={handleCategoryAll} >All Items</button>
+                        <button onClick={()=>{handleCategory('Beverages')}} >Beverages</button>
+                        <button onClick={()=>{handleCategory('Sweets')}} >Sweets</button>
+                        <button onClick={()=>{handleCategory('Donuts')}} >Donuts</button>
+                        <button onClick={()=>{handleCategory('Snacks')}} >Snacks</button>
+                        <button onClick={()=>{handleCategory('Chats')}} >Chats</button>
+                        <br/>
+                        <hr/>
+                    </div>
+                )
+            }
+
+            const ItemsList=(props)=>{
+                const {list,incQuantity,decQuantity,removeItem}=props
+                return(
+                    <div>
+                        <h2 style={textAlign} >Listing Items - {list.length} </h2>
+
+                        <div className="itemsContainer" >
+                            {list.map(ele=>{
+                                return(
+                                    <div className="productStyle" key={ele.id}>
+                                        
+                                        <h2 style={{display:"block"}}>{ele.name}</h2>
+                                        <img src={ele.image} alt={ele.name} className="pictures" />
+                                        <br/>
+                                        <b>Rs. {ele.price}</b> 
+                                        <br/> <br/>
+                                        
+                                        {
+                                            ele.quantity>0 ? 
+                                            (
+                                                <div>
+                                                    <button onClick={()=>{decQuantity(ele.id)}}>-</button>
+                                                    {ele.quantity}
+                                                    <button onClick={()=>{incQuantity(ele.id)}}>+</button>
+                                                    <br/> <br/>
+                                                    <button onClick={()=>{removeItem(ele.id)}}>Remove</button>
+                                                    <br/> <br/>
+                                                </div>
+                                            ) : 
+                                            (
+                                                <div>
+                                                        <button onClick={()=>{incQuantity(ele.id)}}>Add</button>
+                                                        <br/> <br/>
+                                                </div>
+                                            )
+                                        }
+                                        
+                                        </div>
+                                )
+                            })}
+                        </div>
+                        <br/>
+                        <hr/> <hr/>
+                    </div>
+                )
+            }
+
+            const BillItems=(props)=>{
+                const {billItems,qr,handlePay,closeQr}=props
+
+                //bill computation
+                const price=billItems.reduce((previousVal,currentVal)=>{
+                    return previousVal+currentVal.price*currentVal.quantity
+                },0)
+                const gst=10
+                const totalPrice=price + (price*(gst/100))
+
+                return(
+                    <div>
+                        <h2 style={textAlign} >Bill Items - {billItems.length}</h2>
+                        <div>
+                            <table border='1'>
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {billItems.map((ele,i)=>{
+                                        return(
+                                            <tr key={ele.id} >
+                                                <td>{i+1}</td>
+                                                <td>{ele.name}</td>
+                                                <td>{ele.quantity}</td>
+                                                <td>{ele.quantity*ele.price}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                        <br/> <br/>
+                        <b>Price - Rs. {price}</b>
+                        <br/>
+                        <b>GST - {gst} %</b>
+                        <br/>
+                        <b>Total Price - Rs. { totalPrice.toFixed(2) }</b>
+                        <br/> <br/>
+
+                        <button onClick={handlePay}>Pay</button>
+                        {
+                            qr && (
+                                <div>
+                                    <img src={`https://upiqr.in/api/qr?name=Santanu%20Sinha&vpa=santanu@%40ybl&amount=${totalPrice.toFixed(2)}&format=png`} alt="qr code"/>
+                                    <br/>
+                                    <button onClick={closeQr} >Done</button>
+                                </div>
+                            )
+                        }
+                    </div>
+                )
+            }
+
+            const ItemsContainer=(props)=>{
+                const [items,setItems]=useState([
+                    { id: 1, name: "Coconut Burfy", price: 170, quantity: 0, type: "Sweets", image: "./images/cocoburfy.png" },
+                    { id: 2, name: "Milk Burfi", price: 181, quantity: 0, type: "Sweets", image: "./images/burfy.png" },
+                    { id: 3, name: "Mothi Pak", price: 181, quantity: 0, type: "Sweets", image: "./images/pak.png" },
+                    { id: 4, name: "Milk Cake", price: 198, quantity: 0, type: "Sweets", image: "./images/milkcake.png" },
+                    { id: 5, name: "Kesar Peda", price: 198, quantity: 0, type: "Sweets", image: "./images/kesar.png" },
+                    { id: 6, name: "Doodh Peda", price: 165, quantity: 0, type: "Sweets", image: "./images/doodhpeda.png" },
+                    { id: 7, name: "Champakali", price: 176, quantity: 0, type: "Sweets", image: "./images/champakali.png" },
+                    { id: 8, name: "Rasgulla", price: 170, quantity: 0, type: "Sweets", image: "./images/rasgulla.png" },
+                    { id: 9, name: "Badam Milk", price: 145, quantity: 0, type: "Beverages", image: "./images/badammilk.png" },
+                    { id: 10, name: "Choco Milkshake", price: 120, quantity: 0, type: "Beverages", image: "./images/choco.png" },
+                    { id: 11, name: "Strawberry Milkshake", price: 190, quantity: 0, type: "Beverages", image: "./images/strawberry.png" },
+                    { id: 12, name: "Watermelon Juice", price: 130, quantity: 0, type: "Beverages", image: "./images/water.png" },
+                    { id: 13, name: "Grape Juice", price: 130, quantity: 0, type: "Beverages", image: "./images/grape.png" },
+                    { id: 14, name: "Choco Crush", price: 164, quantity: 0, type: "Donuts", image: "./images/choco1.png" },
+                    { id: 15, name: "Divine Surprise", price: 150, quantity: 0, type: "Donuts", image: "./images/divine.png" },
+                    { id: 16, name: "Chocolate Trinity", price: 175, quantity: 0, type: "Donuts", image: "./images/trinity.png" },
+                    { id: 17, name: "Sinful Indulgence", price: 130, quantity: 0, type: "Donuts", image: "./images/sinful.png" },
+                    { id: 18, name: "Chocolate Divine", price: 190, quantity: 0, type: "Snacks", image: "./images/chococrush.png" },
+                    { id: 19, name:'Pav Bhaji', price:70, quantity:0, type:'Chats', image:"./images/pav-bhaji.jpg"},
+                    { id: 20, name:'Dahi Puri', price:60, quantity:0, type:'Chats', image:"./images/dahi-puri.jpg"},
+                    { id: 21, name:'Bhel Puri', price:60, quantity:0, type:'Chats', image:"./images/bhel-puri.jpg"},
+                    { id: 22, name:'Pani Puri', price:60, quantity:0, type:'Chats', image:"./images/pani-puri.jpg"}
+                ])
+                const [eatIn,setEatIn]=useState(true)
+                const [parcel,setParcel]=useState(false)
+                const [list,setList]=useState(items)
+                //state for payment
+                const [qr,setQr]=useState(false)
+                
+
+                const eatInHandle=()=>{
+                    setParcel(false)
+                    setEatIn(true)
+                }
+
+                const parcelHandle=()=>{
+                    setEatIn(false)
+                    setParcel(true)
+                }
+
+                
+                // display category list if the button is selected
+                const handleCategory=(type)=>{
+                    const result=items.filter(ele=>{
+                        return ele.type==type
+                    }) 
+                    setList(result)
+                }
+
+                //display all items
+                const handleCategoryAll=()=>{
+                    setList(items)
+                }
+
+                //increase quantity
+                const incQuantity=(id)=>{
+                    const result1=items.map(ele=>{
+                        if(ele.id==id){
+                            return {...ele,quantity:ele.quantity+1}
+                        }else{
+                            return {...ele}
+                        }
+                    })
+                    setItems(result1)
+                    console.log('resul1',result1)
+
+                    const result2=list.map(ele=>{
+                        if(ele.id==id){
+                            return {...ele,quantity:ele.quantity+1}
+                        }else{
+                            return {...ele}
+                        }
+                    })
+                    setList(result2)
+                    //console.log(result2)
+                }
+
+                //decrease quantity
+                const decQuantity=(id)=>{
+                    const result1=items.map(ele=>{
+                        if(ele.id==id){
+                            return {...ele,quantity:ele.quantity-1}
+                        }else{
+                            return {...ele}
+                        }
+                    })
+                    setItems(result1)
+                    console.log('resul1',result1)
+
+                    const result2=list.map(ele=>{
+                        if(ele.id==id){
+                            return {...ele,quantity:ele.quantity-1}
+                        }else{
+                            return {...ele}
+                        }
+                    })
+                    setList(result2)
+                    //console.log(result2)
+                }
+
+                //remove Item
+                const removeItem=(id)=>{
+                    const result1=items.map(ele=>{
+                        if(ele.id==id){
+                            return {...ele,quantity:0}
+                        }else{
+                            return {...ele}
+                        }
+                    })
+                    setItems(result1)
+                    console.log('resul1',result1)
+
+                    const result2=list.map(ele=>{
+                        if(ele.id==id){
+                            return {...ele,quantity:0}
+                        }else{
+                            return {...ele}
+                        }
+                    })
+                    setList(result2)
+                    //console.log(result2)
+                }
+
+                //filter bill Items
+                const billItems=items.filter(ele=>{
+                    return ele.quantity>0
+                })
+
+                //Payment
+                const handlePay=()=>{
+                    setQr(true)
+                }
+
+                //close qr code and reset payment
+                const closeQr=()=>{
+                    setQr(false)
+
+                    const result1=items.map(ele=>{
+                        return {...ele,quantity:0}
+                    })
+                    setItems(result1)
+
+                    const result2=items.map(ele=>{
+                        return {...ele,quantity:0}
+                    })
+                    setList(result2)
+                }
+
+                return(
+                    <div>
+                        <h1 style={textAlign}> Fast Food Restaurant</h1>
+                        <OrderTypeButton  eatInHandle={eatInHandle} parcelHandle={parcelHandle}/>
+                        {
+                            eatIn && 
+                            <div>
+                                <Categories handleCategory={handleCategory} handleCategoryAll={handleCategoryAll} />
+                                <ItemsList list={list} incQuantity={incQuantity} decQuantity={decQuantity} removeItem={removeItem}/>
+                                {
+                                    billItems.length>0 && <BillItems billItems={billItems} qr={qr} handlePay={handlePay} closeQr={closeQr} />
+                                }
+                            </div>
+                        }
+                    </div>
+                )
+            }
+
+            const App=(props)=>{
+                return <ItemsContainer/>
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

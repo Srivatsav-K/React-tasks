@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            user-info-component
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                Create components called as UserInfo and App
+                The main purpose of UserInfo component is to display the id, name, email and city of a user
+                Sometimes we don't have the email and city of user, at that time display the N/A for the respective label
+                Render the UserInfo component couple of times inside the App component
+                The 2 user info is as follows
+            */
+
+            const UserInfo=(props)=>{
+                const {user}=props
+
+                const result=Object.keys(user).map((ele,i)=>{
+
+                    if(user[ele].length!=0){
+                        return <p key={i}> {ele} - {user[ele]} </p>
+                    }else{
+                        return <p key={i}> {ele} - N/A </p>
+                    }
+                })
+
+                return(
+                    <div>
+                        {result}
+                        <hr/>
+                    </div>
+                )
+            }
+
+            const App=(props)=>{
+                const user1 = { id: 1, name: 'user1', email: 'user1@gmail.com', city: 'bangalore'}
+                const user2 = { id: 1, name: 'user1', email: '', city: ''}
+
+                return(
+                    <div>
+                        <h1>User Info</h1>
+                        <UserInfo user={user1}/>
+                        <UserInfo user={user2}/>
+                    </div>
+                )
+            }
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

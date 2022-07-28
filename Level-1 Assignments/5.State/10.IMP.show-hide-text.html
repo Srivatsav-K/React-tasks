@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+            /*
+                1. Create component called as TextDisplay
+                2. Maintain state "status" as a boolean
+                3. Display some text along with button
+                4. When the status is true
+                    then display text 
+                    the button text needs to be hide
+                5. When the status is false.
+                    then don't display text
+                    the button text needs to be show
+                6. Add a event handler, which even clicked will change status to it's opposite
+            */
+            const {useState}=React
+
+            const str='This is a sample text'
+        
+            const TextDisplay=(props)=>{
+                const [status,setStatus]=useState(true)
+                
+                //callback
+                const toggle=()=>{
+                    //when status is true button will show hide. when it is clicked status must be set to false. it then re-renders.
+                    //status ? setStatus(false) : setStatus(true)
+                    const result=!status
+                    setStatus(result)
+                }
+
+                return(
+                    <div>
+                        <h1>Show/Hide</h1>
+                        
+                        {   //if status is true it returns <P></p>. Else it returns false(which doesnt render anything)
+                            status && <p>React makes it painless to createe interactive UIs. Design simple views for each state in your application, and React will efficiently update and render</p> 
+                        }
+
+                        <button onClick={toggle}>
+                            {status ? 'Hide' : 'Show'}
+                        </button>
+
+                    </div>
+                )
+                
+            }
+
+            ReactDOM.render(<TextDisplay/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>

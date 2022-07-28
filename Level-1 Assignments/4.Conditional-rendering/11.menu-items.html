@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            menu-items
+        </title>
+    </head>
+    <body>
+        <div id="root">
+
+        </div>
+
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+        <script type="text/babel">
+            const rootHandle=document.getElementById('root')
+
+            /*
+                Create multiple components IsVeg, IsNonVeg, MenuItem and App
+                IsVeg returns the veg icon ( see notes below )
+                IsNonVeg returns the non veg icon ( see notes below )
+                MenuItem renders an Item information - item information consists of the following:
+                    *type icon
+                    *name
+                    *image
+                    *price
+                You are provided an array of menuItems
+                The MenuItem component is rendered inside the App component
+
+                Notes
+                veg icon - https://i.ibb.co/kQQyRwP/veg.png
+                non veg icon - https://i.ibb.co/stN0gCz/non-veg.png
+            */
+
+            const App=(props)=>{
+
+                const menuItems = [
+                    { id: 1, name: 'Aloo Dum Biryani', price: 114, isVeg: true, image: 'https://i.ibb.co/MRr0V8h/aloo-biryani.png' },
+                    { id: 2, name: 'Chicken Kebab', price: 142, isVeg: false, image: 'https://i.ibb.co/nBxxxp6/chicken-kebab.png' },
+                    { id: 3, name: 'Chicken Lollipop', price: 153,  isVeg: false, image: 'https://i.ibb.co/09YrZNn/chicken-lollipop.png' },
+                    { id: 4, name: 'Chicken Biryani', price: 148, isVeg: false, image: 'https://i.ibb.co/gv3FYqh/chicken-biryani.png' }
+                ]
+
+                return(
+                    <div>
+                        <h1>Menu Items</h1>
+                        <MenuItems items={menuItems}/>
+                    </div>
+                )
+            }
+
+            const MenuItems=(props)=>{
+                const {items}=props
+
+                return( 
+                    items.map(ele=>{
+                        return(
+
+                            <div key={ele.id}>
+
+                                { (ele.isVeg) ? (<IsVeg ele={ele}/>) : (<IsNonVeg ele={ele}/>) }
+
+                                <img src={ele.image} alt={ele.name}/>
+                                <p>INR {ele.price}</p>
+                                <hr/>
+
+                            </div>
+
+                        )
+                    })
+                )
+            }
+
+            const IsVeg=(props)=>{
+                const {ele}=props
+                return(
+                    <h2><img src="https://i.ibb.co/kQQyRwP/veg.png" alt="veg-icon"/> {ele.name} </h2>
+                )
+            }
+
+            const IsNonVeg=(props)=>{
+                const {ele}=props
+                return(
+                    <h2><img src="https://i.ibb.co/stN0gCz/non-veg.png" alt="non-veg-icon"/> {ele.name} </h2>
+                ) 
+            }
+
+            
+
+            ReactDOM.render(<App/>,rootHandle)
+
+        </script>
+        
+    </body>
+</html>
